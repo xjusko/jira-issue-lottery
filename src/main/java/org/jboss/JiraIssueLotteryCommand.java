@@ -8,6 +8,7 @@ import org.apache.camel.component.jira.JiraConfiguration;
 import org.apache.camel.component.jira.JiraEndpoint;
 import org.jboss.config.JiraLotteryAppConfig;
 import org.jboss.processing.IssueProcessor;
+import org.jboss.processing.AllIssuesProcessor;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
@@ -28,30 +29,15 @@ public class JiraIssueLotteryCommand implements Runnable {
         JiraConfiguration jiraConfiguration = new JiraConfiguration();
         jiraConfiguration.setJiraUrl("https://issues.redhat.com");
         jiraConfiguration.setAccessToken(jiraLotteryAppConfig.accessToken());
-        //        jiraEndpoint.setJql("project in (JBEAP, WFLY, WFCORE, RESTEASY) AND component not in (Documentation, Localization) AND assignee = rhn-support-rbudinsk");
         JiraEndpoint jiraEndpoint = new JiraEndpoint("issues.redhat.com", new JiraComponent(camelContext), jiraConfiguration);
         jiraEndpoint.connect();
+        AllIssuesProcessor allIssuesProcessor = AllIssuesProcessor.getInstance(jiraEndpoint);
         Exchange exchange = jiraEndpoint.createExchange();
         try {
+            allIssuesProcessor.execute();
             new IssueProcessor(jiraEndpoint, "JBEAP-25900").process(exchange);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        //        jiraEndpoint.setType(JiraType.NEWISSUES);
-        //        try {
-        //            Consumer issues = jiraEndpoint.createConsumer(new IssueProcessor());
-        //            issues.start();
-        //            try {
-        //                Thread.sleep(5 * 1000);
-        //            }
-        //            catch (InterruptedException e) {
-        //                e.printStackTrace();
-        //            }
-        //            issues.stop();
-        //            issues.close();
-        ////            System.out.printf("Hello %s\n", issues.createExchange(true).getMessage());
-        //        } catch (Exception e) {
-        //            throw new RuntimeException(e);
-        //        }
     }
 }
