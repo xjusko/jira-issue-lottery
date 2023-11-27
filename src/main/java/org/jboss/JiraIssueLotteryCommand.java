@@ -1,22 +1,15 @@
 package org.jboss;
 
-import com.atlassian.jira.rest.client.api.domain.Comment;
-import org.jboss.config.JiraLotteryAppConfig;
-import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
 import org.apache.camel.component.jira.JiraComponent;
 import org.apache.camel.component.jira.JiraConfiguration;
-import org.apache.camel.component.jira.JiraConstants;
 import org.apache.camel.component.jira.JiraEndpoint;
-import org.apache.camel.component.jira.JiraType;
+import org.jboss.config.JiraLotteryAppConfig;
+import org.jboss.processing.IssueProcessor;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Command(name = "jira-issue-lottery", mixinStandardHelpOptions = true)
 public class JiraIssueLotteryCommand implements Runnable {
@@ -30,33 +23,35 @@ public class JiraIssueLotteryCommand implements Runnable {
     @Parameters(paramLabel = "<name>", defaultValue = "picocli", description = "Your name.")
     String name;
 
-    public static class IssueProcessor implements Processor {
-
-        @Override
-        public void process(Exchange exchange) throws Exception {
-            //noinspection unchecked
-            List<Comment> issues = (List<Comment>) exchange.getIn().getBody(List.class);
-            String comments = issues.stream().map(Comment::getBody)
-                    .collect(Collectors.joining("\n\n"));
-            Log.info(comments);
-        }
-    }
-
     @Override
     public void run() {
         JiraConfiguration jiraConfiguration = new JiraConfiguration();
         jiraConfiguration.setJiraUrl("https://issues.redhat.com");
         jiraConfiguration.setAccessToken(jiraLotteryAppConfig.accessToken());
+        //        jiraEndpoint.setJql("project in (JBEAP, WFLY, WFCORE, RESTEASY) AND component not in (Documentation, Localization) AND assignee = rhn-support-rbudinsk");
         JiraEndpoint jiraEndpoint = new JiraEndpoint("issues.redhat.com", new JiraComponent(camelContext), jiraConfiguration);
         jiraEndpoint.connect();
         Exchange exchange = jiraEndpoint.createExchange();
-        exchange.getIn().setHeader(JiraConstants.ISSUE_KEY, "JBEAP-25900");
-        jiraEndpoint.setType(JiraType.FETCHCOMMENTS);
         try {
-            jiraEndpoint.createProducer().process(exchange);
-            new IssueProcessor().process(exchange);
+            new IssueProcessor(jiraEndpoint, "JBEAP-25900").process(exchange);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        //        jiraEndpoint.setType(JiraType.NEWISSUES);
+        //        try {
+        //            Consumer issues = jiraEndpoint.createConsumer(new IssueProcessor());
+        //            issues.start();
+        //            try {
+        //                Thread.sleep(5 * 1000);
+        //            }
+        //            catch (InterruptedException e) {
+        //                e.printStackTrace();
+        //            }
+        //            issues.stop();
+        //            issues.close();
+        ////            System.out.printf("Hello %s\n", issues.createExchange(true).getMessage());
+        //        } catch (Exception e) {
+        //            throw new RuntimeException(e);
+        //        }
     }
 }
