@@ -4,10 +4,11 @@
 package org.jboss.query;
 
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SearchQuery {
     private final IssueStatus status;
@@ -65,8 +66,12 @@ public class SearchQuery {
         return Optional.ofNullable(maxResults);
     }
 
-    public java.util.stream.Stream<String> getLabels() {
-        return labels == null ? java.util.stream.Stream.empty() : labels.stream();
+    public Optional<Set<String>> getLabels() {
+        return Optional.ofNullable(labels);
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     public static class Builder {
@@ -80,6 +85,9 @@ public class SearchQuery {
         private Integer maxResults;
         private Set<String> labels;
 
+        private Builder() {
+        }
+
         public Builder setStatus(IssueStatus status) {
             this.status = status;
             return this;
@@ -90,13 +98,13 @@ public class SearchQuery {
             return this;
         }
 
-        public Builder setProjects(String... projects) {
-            this.projects = Arrays.asList(projects);
+        public Builder setProjects(String project, String... projects) {
+            this.projects = Stream.concat(Stream.of(project), Stream.of(projects)).toList();
             return this;
         }
 
-        public Builder setComponents(String... components) {
-            this.components = Arrays.asList(components);
+        public Builder setComponents(String component, String... components) {
+            this.components = Stream.concat(Stream.of(component), Stream.of(components)).toList();
             return this;
         }
 
@@ -115,8 +123,8 @@ public class SearchQuery {
             return this;
         }
 
-        public Builder setLabels(Set<String> labels) {
-            this.labels = labels;
+        public Builder setLabels(String label, String... labels) {
+            this.labels = Stream.concat(Stream.of(label), Stream.of(labels)).collect(Collectors.toSet());
             return this;
         }
 
