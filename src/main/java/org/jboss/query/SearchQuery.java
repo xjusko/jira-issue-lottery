@@ -4,25 +4,27 @@
 package org.jboss.query;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
 public class SearchQuery {
     private final IssueStatus status;
     private final String assignee;
-    private final String reporter;
-    private final String product;
+    private final List<String> projects;
+    private final List<String> components;
     private final LocalDate startDate;
     private final LocalDate endDate;
     private final Integer maxResults;
     private final Set<String> labels;
 
-    private SearchQuery(IssueStatus status, String assignee, String reporter, String product, LocalDate startDate,
-            LocalDate endDate, Integer maxResults, Set<String> labels) {
+    private SearchQuery(IssueStatus status, String assignee, List<String> projects, List<String> components,
+            LocalDate startDate, LocalDate endDate, Integer maxResults, Set<String> labels) {
         this.status = status;
         this.assignee = assignee;
-        this.reporter = reporter;
-        this.product = product;
+        this.projects = projects;
+        this.components = components;
         this.startDate = startDate;
         this.endDate = endDate;
         this.maxResults = maxResults;
@@ -43,12 +45,12 @@ public class SearchQuery {
         return Optional.ofNullable(assignee);
     }
 
-    public Optional<String> getReporter() {
-        return Optional.ofNullable(reporter);
+    public Optional<List<String>> getProjects() {
+        return Optional.ofNullable(projects);
     }
 
-    public Optional<String> getProduct() {
-        return Optional.ofNullable(product);
+    public Optional<List<String>> getComponents() {
+        return Optional.ofNullable(components);
     }
 
     public Optional<LocalDate> getStartDate() {
@@ -67,17 +69,12 @@ public class SearchQuery {
         return labels == null ? java.util.stream.Stream.empty() : labels.stream();
     }
 
-    public boolean isEmpty() {
-        return status == null && assignee == null && reporter == null && product == null && startDate == null && endDate == null
-                && maxResults == null;
-    }
-
     public static class Builder {
 
         private IssueStatus status;
         private String assignee;
-        private String reporter;
-        private String product;
+        private List<String> projects;
+        private List<String> components;
         private LocalDate startDate;
         private LocalDate endDate;
         private Integer maxResults;
@@ -93,13 +90,13 @@ public class SearchQuery {
             return this;
         }
 
-        public Builder setReporter(String reporter) {
-            this.reporter = reporter;
+        public Builder setProjects(String... projects) {
+            this.projects = Arrays.asList(projects);
             return this;
         }
 
-        public Builder setProduct(String product) {
-            this.product = product;
+        public Builder setComponents(String... components) {
+            this.components = Arrays.asList(components);
             return this;
         }
 
@@ -124,7 +121,7 @@ public class SearchQuery {
         }
 
         public SearchQuery build() {
-            return new SearchQuery(status, assignee, reporter, product, startDate, endDate, maxResults, labels);
+            return new SearchQuery(status, assignee, projects, components, startDate, endDate, maxResults, labels);
         }
     }
 }
