@@ -29,7 +29,8 @@ public enum Predicate {
 
     public String apply(@Nonnull String lhs) {
         if (binary) {
-            throw new UnsupportedOperationException("Predicate %s can't be used only with a single operand".formatted(this.value.strip()));
+            throw new UnsupportedOperationException(
+                    "Predicate %s can't be used only with a single operand".formatted(this.value.strip()));
         }
 
         return "%s %s ".formatted(value, lhs);
@@ -40,9 +41,10 @@ public enum Predicate {
      */
     public String apply(@Nonnull String lhs, @Nonnull String rhs) {
         if (!binary) {
-            throw new UnsupportedOperationException("Predicate %s can't be used with two operands".formatted(this.value.strip()));
+            throw new UnsupportedOperationException(
+                    "Predicate %s can't be used with two operands".formatted(this.value.strip()));
         }
 
-        return " %s %s %s ".formatted(lhs, value, rhs.startsWith("(") ? "'%s'".formatted(rhs) : rhs);
+        return " %s %s %s ".formatted(lhs, value, rhs.startsWith("(") ? rhs : "'%s'".formatted(rhs));
     }
 }

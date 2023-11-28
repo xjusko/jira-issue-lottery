@@ -1,9 +1,39 @@
 package org.jboss.jql;
 
+import org.jboss.query.Predicate;
+import org.jboss.query.SearchQuery;
+
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+
 public class JqlBuilder {
 
-    // Builder for converting some structured Query into final String
-    public String build(Object object) {
-        return null;
+    public static String build(SearchQuery searchQuery) {
+        List<String> predicates = new ArrayList<>();
+        searchQuery.getStatus().ifPresent(status -> predicates.add(Predicate.EQUAL.apply("status", status.toString())));
+        searchQuery.getAssignee().ifPresent(assignee -> predicates.add(Predicate.EQUAL.apply("assignee", assignee)));
+        searchQuery.getComponents().flatMap(JqlBuilder::createQuerySet)
+                .ifPresent(set -> predicates.add(Predicate.IN.apply("component", set)));
+        searchQuery.getProjects().flatMap(JqlBuilder::createQuerySet)
+                .ifPresent(set -> predicates.add(Predicate.IN.apply("project", set)));
+        searchQuery.getStartDate().ifPresent(date -> {
+            String formattedDate = date.atStartOfDay().format((DateTimeFormatter.ISO_LOCAL_DATE));
+            predicates.add(Predicate.GE_THAN.apply("updated", formattedDate));
+        });
+
+        searchQuery.getLabels().flatMap(JqlBuilder::createQuerySet)
+                .ifPresent(set -> predicates.add(Predicate.IN.apply("label", set)));
+        return String.join(" %s ".formatted(Predicate.AND.toString()), predicates).strip();
+    }
+
+    private static Optional<String> createQuerySet(Collection<String> set) {
+        if (set.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of("(%s)".formatted(String.join(", ", set)));
     }
 }
