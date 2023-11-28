@@ -6,14 +6,15 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.component.jira.JiraEndpoint;
 import org.apache.camel.component.jira.consumer.NewIssuesConsumer;
+import org.jboss.processing.state.JiraIssuesState;
 
-public class AllIssuesProcessor extends NewIssuesConsumer implements Executable {
+public class AllIssuesProcessor extends NewIssuesConsumer implements Executable<JiraIssuesState> {
 
     private AllIssuesProcessor(JiraEndpoint jiraEndpoint) {
         super(jiraEndpoint, new PerIssueProcessor());
     }
 
-    private static final class PerIssueProcessor implements Processor {
+    private final class PerIssueProcessor implements Processor {
 
         @Override
         public void process(Exchange exchange) throws Exception {
@@ -28,7 +29,8 @@ public class AllIssuesProcessor extends NewIssuesConsumer implements Executable 
     }
 
     @Override
-    public void execute() throws Exception {
+    public JiraIssuesState execute() throws Exception {
         doPoll();
+        return null;
     }
 }
