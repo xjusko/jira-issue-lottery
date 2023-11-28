@@ -26,7 +26,7 @@ public class JqlBuilder {
 
         searchQuery.getLabels().flatMap(JqlBuilder::createQuerySet)
                 .ifPresent(set -> predicates.add(Predicate.IN.apply("label", set)));
-        return String.join(" %s ".formatted(Predicate.AND.toString()), predicates).strip();
+        return String.join(Predicate.AND.toString(), predicates).strip();
     }
 
     private static Optional<String> createQuerySet(Collection<String> set) {
