@@ -15,8 +15,8 @@ public class IssueStatusTest {
 
     /**
      * We check only for number of distinguished entries.
-     *  In the next text we check for identity of {@code org.jboss.query.IssueStatus}.
-     *  So if we have multiple same entries we would count them as a single one.
+     * In the next text we check for identity of {@code org.jboss.query.IssueStatus}.
+     * So if we have multiple same entries we would count them as a single one.
      */
     @Test
     void testGettingCorrectEnum() {

@@ -12,19 +12,17 @@ public class SearchQuery {
     private final String assignee;
     private final String reporter;
     private final String product;
-    private final String component;
     private final LocalDate startDate;
     private final LocalDate endDate;
     private final Integer maxResults;
     private final Set<String> labels;
 
-    private SearchQuery(IssueStatus status, String assignee, String reporter, String product,
-            String component, LocalDate startDate, LocalDate endDate, Integer maxResults, Set<String> labels) {
+    private SearchQuery(IssueStatus status, String assignee, String reporter, String product, LocalDate startDate,
+            LocalDate endDate, Integer maxResults, Set<String> labels) {
         this.status = status;
         this.assignee = assignee;
         this.reporter = reporter;
         this.product = product;
-        this.component = component;
         this.startDate = startDate;
         this.endDate = endDate;
         this.maxResults = maxResults;
@@ -53,10 +51,6 @@ public class SearchQuery {
         return Optional.ofNullable(product);
     }
 
-    public Optional<String> getComponent() {
-        return Optional.ofNullable(component);
-    }
-
     public Optional<LocalDate> getStartDate() {
         return Optional.ofNullable(startDate);
     }
@@ -74,8 +68,8 @@ public class SearchQuery {
     }
 
     public boolean isEmpty() {
-        return status == null && assignee == null && reporter == null && product == null && component == null
-                && startDate == null && endDate == null && maxResults == null;
+        return status == null && assignee == null && reporter == null && product == null && startDate == null && endDate == null
+                && maxResults == null;
     }
 
     public static class Builder {
@@ -84,7 +78,6 @@ public class SearchQuery {
         private String assignee;
         private String reporter;
         private String product;
-        private String component;
         private LocalDate startDate;
         private LocalDate endDate;
         private Integer maxResults;
@@ -110,11 +103,6 @@ public class SearchQuery {
             return this;
         }
 
-        public Builder setComponent(String component) {
-            this.component = component;
-            return this;
-        }
-
         public Builder setStartDate(LocalDate startDate) {
             this.startDate = startDate;
             return this;
@@ -136,7 +124,7 @@ public class SearchQuery {
         }
 
         public SearchQuery build() {
-            return new SearchQuery(status, assignee, reporter, product, component, startDate, endDate, maxResults, labels);
+            return new SearchQuery(status, assignee, reporter, product, startDate, endDate, maxResults, labels);
         }
     }
 }
