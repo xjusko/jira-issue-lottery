@@ -9,7 +9,7 @@ import org.apache.camel.component.jira.JiraComponent;
 import org.apache.camel.component.jira.JiraConfiguration;
 import org.apache.camel.component.jira.JiraEndpoint;
 import org.jboss.config.JiraLotteryAppConfig;
-import org.jboss.processing.EveryIssueProcessor;
+import org.jboss.processing.NewIssueCollector;
 import org.jboss.processing.IssueProcessor;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
@@ -51,10 +51,10 @@ public class JiraIssueLotteryCommand implements Runnable {
 
     @Override
     public void run() {
-        EveryIssueProcessor everyIssueProcessor = EveryIssueProcessor.getInstance(jiraEndpoint);
+        NewIssueCollector newIssueCollector = NewIssueCollector.getInstance(jiraEndpoint);
         Exchange exchange = jiraEndpoint.createExchange();
         try {
-            everyIssueProcessor.execute().getIssueStates().forEach(Log::info);
+            newIssueCollector.execute().getIssueStates().forEach(Log::info);
             new IssueProcessor(jiraEndpoint, "JBEAP-25900").process(exchange);
         } catch (Exception e) {
             throw new RuntimeException(e);

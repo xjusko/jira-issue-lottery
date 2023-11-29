@@ -33,7 +33,7 @@ public enum Predicate {
                     "Predicate %s can't be used only with a single operand".formatted(this.value.strip()));
         }
 
-        return "%s %s ".formatted(value, lhs);
+        return "%s %s ".formatted(lhs, value);
     }
 
     /**
