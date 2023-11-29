@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 public class SearchQuery {
     private static final String EMPTY_ASSIGNEE = "UNDEFINED";
 
-    private final IssueStatus status;
+    private final Set<IssueStatus> statuses;
     private final String assignee;
     private final List<String> projects;
     private final List<String> components;
@@ -22,9 +22,9 @@ public class SearchQuery {
     private final Integer maxResults;
     private final Set<String> labels;
 
-    private SearchQuery(IssueStatus status, String assignee, List<String> projects, List<String> components,
+    private SearchQuery(Set<IssueStatus> statuses, String assignee, List<String> projects, List<String> components,
             LocalDate startDate, LocalDate endDate, Integer maxResults, Set<String> labels) {
-        this.status = status;
+        this.statuses = statuses;
         this.assignee = assignee;
         this.projects = projects;
         this.components = components;
@@ -40,8 +40,8 @@ public class SearchQuery {
             throw new IllegalArgumentException("endDate cannot be in the future.");
     }
 
-    public Optional<IssueStatus> getStatus() {
-        return Optional.ofNullable(status);
+    public Optional<Set<IssueStatus>> getStatuses() {
+        return Optional.ofNullable(statuses);
     }
 
     public boolean isAssigneeEmpty() {
@@ -82,7 +82,7 @@ public class SearchQuery {
 
     public static class Builder {
 
-        private IssueStatus status;
+        private Set<IssueStatus> statuses;
         private String assignee;
         private List<String> projects;
         private List<String> components;
@@ -94,8 +94,8 @@ public class SearchQuery {
         private Builder() {
         }
 
-        public Builder setStatus(IssueStatus status) {
-            this.status = status;
+        public Builder setStatus(IssueStatus status, IssueStatus... statuses) {
+            this.statuses = Stream.concat(Stream.of(status), Stream.of(statuses)).collect(Collectors.toSet());
             return this;
         }
 
@@ -140,7 +140,7 @@ public class SearchQuery {
         }
 
         public SearchQuery build() {
-            return new SearchQuery(status, assignee, projects, components, startDate, endDate, maxResults, labels);
+            return new SearchQuery(statuses, assignee, projects, components, startDate, endDate, maxResults, labels);
         }
     }
 }

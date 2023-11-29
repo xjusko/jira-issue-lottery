@@ -13,7 +13,7 @@ public class JqlBuilder {
 
     public static String build(SearchQuery searchQuery) {
         List<String> predicates = new ArrayList<>();
-        searchQuery.getStatus().ifPresent(status -> predicates.add(Predicate.EQUAL.apply("status", status.toString())));
+        searchQuery.getStatuses().ifPresent(status -> predicates.add(Predicate.EQUAL.apply("status", status.toString())));
         searchQuery.getAssignee().ifPresent(assignee -> {
             if (searchQuery.isAssigneeEmpty()) {
                 predicates.add(Predicate.EMPTY.apply("assignee"));
