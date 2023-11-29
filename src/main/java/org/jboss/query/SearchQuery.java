@@ -11,9 +11,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class SearchQuery {
+    private static final String NOT_EMPTY = "NOT_EMPTY";
     private static final String EMPTY_ASSIGNEE = "UNDEFINED";
 
-    private final Set<IssueStatus> statuses;
+    private final List<IssueStatus> statuses;
     private final String assignee;
     private final List<String> projects;
     private final List<String> components;
@@ -22,7 +23,7 @@ public class SearchQuery {
     private final Integer maxResults;
     private final Set<String> labels;
 
-    private SearchQuery(Set<IssueStatus> statuses, String assignee, List<String> projects, List<String> components,
+    private SearchQuery(List<IssueStatus> statuses, String assignee, List<String> projects, List<String> components,
             LocalDate startDate, LocalDate endDate, Integer maxResults, Set<String> labels) {
         this.statuses = statuses;
         this.assignee = assignee;
@@ -40,8 +41,12 @@ public class SearchQuery {
             throw new IllegalArgumentException("endDate cannot be in the future.");
     }
 
-    public Optional<Set<IssueStatus>> getStatuses() {
+    public Optional<List<IssueStatus>> getStatuses() {
         return Optional.ofNullable(statuses);
+    }
+
+    public boolean isAssigneeNotEmpty() {
+        return assignee != null && assignee.equals(NOT_EMPTY);
     }
 
     public boolean isAssigneeEmpty() {
@@ -82,7 +87,7 @@ public class SearchQuery {
 
     public static class Builder {
 
-        private Set<IssueStatus> statuses;
+        private List<IssueStatus> statuses;
         private String assignee;
         private List<String> projects;
         private List<String> components;
@@ -95,7 +100,12 @@ public class SearchQuery {
         }
 
         public Builder setStatus(IssueStatus status, IssueStatus... statuses) {
-            this.statuses = Stream.concat(Stream.of(status), Stream.of(statuses)).collect(Collectors.toSet());
+            this.statuses = Stream.concat(Stream.of(status), Stream.of(statuses)).toList();
+            return this;
+        }
+
+        public Builder setAssigneeNotEmpty() {
+            this.assignee = NOT_EMPTY;
             return this;
         }
 
