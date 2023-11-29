@@ -43,6 +43,13 @@ public class SearchQueryTest {
         searchQuery.getComponents().ifPresent(components -> Assertions.assertEquals(2, components.size()));
     }
 
+    @Test
+    void createSearchQueryWithEmptyAssigneeTest() {
+        SearchQuery searchQuery = SearchQuery.builder().setAssigneeEmpty().build();
+        testEmptyGetters(searchQuery, QueryParameter.getAssignee);
+        Assertions.assertTrue(searchQuery.isAssigneeEmpty());
+    }
+
     private void testEmptyGetters(SearchQuery query, QueryParameter... notEmpty) {
         List<QueryParameter> nonEmptyGetters = Arrays.asList(notEmpty);
         for (QueryParameter getter : QueryParameter.values()) {

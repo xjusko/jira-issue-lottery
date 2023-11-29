@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class SearchQuery {
+    private static final String EMPTY_ASSIGNEE = "UNDEFINED";
+
     private final IssueStatus status;
     private final String assignee;
     private final List<String> projects;
@@ -40,6 +42,10 @@ public class SearchQuery {
 
     public Optional<IssueStatus> getStatus() {
         return Optional.ofNullable(status);
+    }
+
+    public boolean isAssigneeEmpty() {
+        return assignee != null && assignee.equals(EMPTY_ASSIGNEE);
     }
 
     public Optional<String> getAssignee() {
@@ -90,6 +96,11 @@ public class SearchQuery {
 
         public Builder setStatus(IssueStatus status) {
             this.status = status;
+            return this;
+        }
+
+        public Builder setAssigneeEmpty() {
+            this.assignee = EMPTY_ASSIGNEE;
             return this;
         }
 

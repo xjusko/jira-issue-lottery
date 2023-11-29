@@ -14,7 +14,13 @@ public class JqlBuilder {
     public static String build(SearchQuery searchQuery) {
         List<String> predicates = new ArrayList<>();
         searchQuery.getStatus().ifPresent(status -> predicates.add(Predicate.EQUAL.apply("status", status.toString())));
-        searchQuery.getAssignee().ifPresent(assignee -> predicates.add(Predicate.EQUAL.apply("assignee", assignee)));
+        searchQuery.getAssignee().ifPresent(assignee -> {
+            if (searchQuery.isAssigneeEmpty()) {
+                predicates.add(Predicate.EMPTY.apply("assignee"));
+            } else {
+                predicates.add(Predicate.EQUAL.apply("assignee", assignee));
+            }
+        });
         searchQuery.getComponents().flatMap(JqlBuilder::createQuerySet)
                 .ifPresent(set -> predicates.add(Predicate.IN.apply("component", set)));
         searchQuery.getProjects().flatMap(JqlBuilder::createQuerySet)

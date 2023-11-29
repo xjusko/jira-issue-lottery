@@ -38,7 +38,8 @@ public class JqlFromSearchQueryTest {
                 .setProjects("WFLY", "RESTEASY", "WFCORE")
                 .setComponents("Documentation")
                 .build();
-        Assertions.assertEquals("component IN (Documentation) AND project IN (WFLY, RESTEASY, WFCORE)", JqlBuilder.build(searchQuery));
+        Assertions.assertEquals("component IN (Documentation) AND project IN (WFLY, RESTEASY, WFCORE)",
+                JqlBuilder.build(searchQuery));
     }
 
     @Test
@@ -48,6 +49,13 @@ public class JqlFromSearchQueryTest {
                 .setProjects("WFLY", "RESTEASY", "WFCORE")
                 .setComponents("Documentation")
                 .build();
-        Assertions.assertEquals("assignee = 'Tadpole' AND component IN (Documentation) AND project IN (WFLY, RESTEASY, WFCORE)", JqlBuilder.build(searchQuery));
+        Assertions.assertEquals("assignee = 'Tadpole' AND component IN (Documentation) AND project IN (WFLY, RESTEASY, WFCORE)",
+                JqlBuilder.build(searchQuery));
+    }
+
+    @Test
+    void assigneeEmptyQueryTest() {
+        searchQuery = SearchQuery.builder().setAssigneeEmpty().build();
+        Assertions.assertEquals("assignee IS EMPTY", JqlBuilder.build(searchQuery));
     }
 }
