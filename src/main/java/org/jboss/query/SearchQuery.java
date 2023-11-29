@@ -99,52 +99,52 @@ public class SearchQuery {
         private Builder() {
         }
 
-        public Builder setStatus(IssueStatus status, IssueStatus... statuses) {
+        public Builder status(IssueStatus status, IssueStatus... statuses) {
             this.statuses = Stream.concat(Stream.of(status), Stream.of(statuses)).toList();
             return this;
         }
 
-        public Builder setAssigneeNotEmpty() {
+        public Builder assigneeNotEmpty() {
             this.assignee = NOT_EMPTY;
             return this;
         }
 
-        public Builder setAssigneeEmpty() {
+        public Builder assigneeEmpty() {
             this.assignee = EMPTY_ASSIGNEE;
             return this;
         }
 
-        public Builder setAssignee(String assignee) {
+        public Builder assignee(String assignee) {
             this.assignee = assignee;
             return this;
         }
 
-        public Builder setProjects(String project, String... projects) {
+        public Builder projects(String project, String... projects) {
             this.projects = Stream.concat(Stream.of(project), Stream.of(projects)).toList();
             return this;
         }
 
-        public Builder setComponents(String component, String... components) {
+        public Builder components(String component, String... components) {
             this.components = Stream.concat(Stream.of(component), Stream.of(components)).toList();
             return this;
         }
 
-        public Builder setStartDate(LocalDate startDate) {
+        public Builder startDate(LocalDate startDate) {
             this.startDate = startDate;
             return this;
         }
 
-        public Builder setEndDate(LocalDate endDate) {
+        public Builder endDate(LocalDate endDate) {
             this.endDate = endDate;
             return this;
         }
 
-        public Builder setMaxResults(Integer maxResults) {
+        public Builder maxResults(Integer maxResults) {
             this.maxResults = maxResults;
             return this;
         }
 
-        public Builder setLabels(String label, String... labels) {
+        public Builder labels(String label, String... labels) {
             this.labels = Stream.concat(Stream.of(label), Stream.of(labels)).collect(Collectors.toSet());
             return this;
         }

@@ -30,14 +30,14 @@ public class SearchQueryTest {
 
     @Test
     void createSimpleSearchQueryWithoutCollectionsTest() {
-        testEmptyGetters(SearchQuery.builder().setAssignee("Tadpole").setStatus(IssueStatus.NEW).setMaxResults(20).build(),
+        testEmptyGetters(SearchQuery.builder().assignee("Tadpole").status(IssueStatus.NEW).maxResults(20).build(),
                 QueryParameter.getAssignee, QueryParameter.getStatus, QueryParameter.getMaxResults);
     }
 
     @Test
     void createSearchQueryWithCollectionsTest() {
-        SearchQuery searchQuery = SearchQuery.builder().setProjects("WFLY", "RESTEASY", "JBEAP")
-                .setComponents("Localization", "Documentation").build();
+        SearchQuery searchQuery = SearchQuery.builder().projects("WFLY", "RESTEASY", "JBEAP")
+                .components("Localization", "Documentation").build();
         testEmptyGetters(searchQuery, QueryParameter.getProjects, QueryParameter.getComponents);
         searchQuery.getProjects().ifPresent(projects -> Assertions.assertEquals(3, projects.size()));
         searchQuery.getComponents().ifPresent(components -> Assertions.assertEquals(2, components.size()));
@@ -45,7 +45,7 @@ public class SearchQueryTest {
 
     @Test
     void createSearchQueryWithEmptyAssigneeTest() {
-        SearchQuery searchQuery = SearchQuery.builder().setAssigneeEmpty().build();
+        SearchQuery searchQuery = SearchQuery.builder().assigneeEmpty().build();
         testEmptyGetters(searchQuery, QueryParameter.getAssignee);
         Assertions.assertTrue(searchQuery.isAssigneeEmpty());
     }

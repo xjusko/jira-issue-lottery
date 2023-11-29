@@ -31,9 +31,9 @@ public class StaleIssueCollector extends NewIssuesConsumer implements Executable
     }
 
     public static StaleIssueCollector getInstance(JiraEndpoint jiraEndpoint) {
-        // TODO add stale period for SearchBuilder.setEndDate
-        SearchQuery searchQuery = SearchQuery.builder().setProjects("WFLY").setAssigneeNotEmpty()
-                .setStatus(IssueStatus.CREATED, IssueStatus.ASSIGNED, IssueStatus.POST).build();
+        // TODO add stale period for SearchBuilder.endDate
+        SearchQuery searchQuery = SearchQuery.builder().projects("WFLY").assigneeNotEmpty()
+                .status(IssueStatus.CREATED, IssueStatus.ASSIGNED, IssueStatus.POST).build();
         jiraEndpoint.setJql(JqlBuilder.build(searchQuery));
         return new StaleIssueCollector(jiraEndpoint);
     }
