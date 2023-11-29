@@ -1,4 +1,4 @@
-package org.jboss.query;
+package org.jboss.jql;
 
 import jakarta.annotation.Nonnull;
 
@@ -13,7 +13,8 @@ public enum Predicate {
     L_THAN("<"),
     LE_THAN("<="),
     NOT("~", false),
-    EMPTY("IS EMPTY", false);
+    EMPTY("IS EMPTY", false),
+    NON_EMPTY("IS NOT EMPTY", false);
 
     private final String value;
     private final boolean binary;
@@ -33,7 +34,7 @@ public enum Predicate {
                     "Predicate %s can't be used only with a single operand".formatted(this.value.strip()));
         }
 
-        return "%s %s ".formatted(lhs, value);
+        return " %s %s ".formatted(lhs, value);
     }
 
     /**
@@ -45,6 +46,6 @@ public enum Predicate {
                     "Predicate %s can't be used with two operands".formatted(this.value.strip()));
         }
 
-        return " %s %s %s ".formatted(lhs, value, rhs.startsWith("(") ? rhs : "'%s'".formatted(rhs));
+        return " %s %s %s ".formatted(lhs, value, rhs.startsWith("(") ? rhs : JqlBuilder.wrapLiteral(rhs));
     }
 }

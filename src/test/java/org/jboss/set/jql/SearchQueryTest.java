@@ -55,7 +55,7 @@ public class SearchQueryTest {
         for (QueryParameter getter : QueryParameter.values()) {
             if (nonEmptyGetters.contains(getter)) {
                 switch (getter) {
-                    case getStatus -> Assertions.assertTrue(query.getStatus().isPresent());
+                    case getStatus -> Assertions.assertTrue(query.getStatuses().isPresent());
                     case getAssignee -> Assertions.assertTrue(query.getAssignee().isPresent());
                     case getProjects -> Assertions.assertTrue(query.getProjects().isPresent());
                     case getComponents -> Assertions.assertTrue(query.getComponents().isPresent());
@@ -66,7 +66,7 @@ public class SearchQueryTest {
                 }
             } else {
                 switch (getter) {
-                    case getStatus -> Assertions.assertTrue(query.getStatus().isEmpty());
+                    case getStatus -> Assertions.assertTrue(query.getStatuses().isEmpty());
                     case getAssignee -> Assertions.assertTrue(query.getAssignee().isEmpty());
                     case getProjects -> Assertions.assertTrue(query.getProjects().isEmpty());
                     case getComponents -> Assertions.assertTrue(query.getComponents().isEmpty());
