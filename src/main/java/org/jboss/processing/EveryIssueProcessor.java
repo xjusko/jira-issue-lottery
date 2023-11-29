@@ -1,6 +1,7 @@
 package org.jboss.processing;
 
 import com.atlassian.jira.rest.client.api.domain.Issue;
+import io.quarkus.logging.Log;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.component.jira.JiraEndpoint;
@@ -32,14 +33,14 @@ public class EveryIssueProcessor extends NewIssuesConsumer implements Executable
     }
 
     public static EveryIssueProcessor getInstance(JiraEndpoint jiraEndpoint) {
-        jiraEndpoint.setJql(
-                "project in (JBEAP, WFLY, WFCORE, RESTEASY) AND component not in (Documentation, Localization) AND assignee = rhn-support-rbudinsk");
+        jiraEndpoint.setJql("project = WFLY AND status = open AND assignee is EMPTY");
         return new EveryIssueProcessor(jiraEndpoint);
     }
 
     @Override
     public EveryIssueState execute() throws Exception {
-        doPoll();
+        int issuesCount = doPoll();
+        Log.infof("Found number of issues %d", issuesCount);
         return new EveryIssueState(state.issueStates);
     }
 }
