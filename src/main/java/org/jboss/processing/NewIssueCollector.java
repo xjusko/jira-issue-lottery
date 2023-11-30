@@ -31,7 +31,7 @@ public class NewIssueCollector extends NewIssuesConsumer implements Executable<E
     }
 
     public static NewIssueCollector getInstance(JiraEndpoint jiraEndpoint) {
-        SearchQuery searchQuery = SearchQuery.builder().setProjects("WFLY").setStatus(IssueStatus.NEW).setAssigneeEmpty()
+        SearchQuery searchQuery = SearchQuery.builder().projects("WFLY").status(IssueStatus.NEW).assigneeEmpty()
                 .build();
         jiraEndpoint.setJql(JqlBuilder.build(searchQuery));
         return new NewIssueCollector(jiraEndpoint);
