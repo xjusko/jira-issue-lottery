@@ -35,24 +35,36 @@ public class JqlFromSearchQueryTest {
     }
 
     @Test
-    void ProjectAndComponentQueryTest() {
+    void projectsAndComponentQueryTest() {
         searchQuery = SearchQuery.builder()
                 .projects("WFLY", "RESTEASY", "WFCORE")
                 .components("Documentation")
                 .build();
-        Assertions.assertEquals("component IN ('Documentation') AND project IN ('WFLY', 'RESTEASY', 'WFCORE')",
+        Assertions.assertEquals("component = 'Documentation' AND project IN ('WFLY', 'RESTEASY', 'WFCORE')",
                 JqlBuilder.build(searchQuery));
     }
 
     @Test
-    void assigneeAndProjectAndComponentQueryTest() {
+    void assigneeAndProjectsAndComponentQueryTest() {
+        searchQuery = SearchQuery.builder()
+                .assignee("Tadpole")
+                .projects("WFLY", "RESTEASY", "WFCORE")
+                .components("Documentation", "Logging")
+                .build();
+        Assertions.assertEquals(
+                "assignee = 'Tadpole' AND component IN ('Documentation', 'Logging') AND project IN ('WFLY', 'RESTEASY', 'WFCORE')",
+                JqlBuilder.build(searchQuery));
+    }
+
+    @Test
+    void assigneeAndProjectsAndComponentsQueryTest() {
         searchQuery = SearchQuery.builder()
                 .assignee("Tadpole")
                 .projects("WFLY", "RESTEASY", "WFCORE")
                 .components("Documentation")
                 .build();
         Assertions.assertEquals(
-                "assignee = 'Tadpole' AND component IN ('Documentation') AND project IN ('WFLY', 'RESTEASY', 'WFCORE')",
+                "assignee = 'Tadpole' AND component = 'Documentation' AND project IN ('WFLY', 'RESTEASY', 'WFCORE')",
                 JqlBuilder.build(searchQuery));
     }
 
