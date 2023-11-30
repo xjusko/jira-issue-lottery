@@ -4,9 +4,7 @@ import org.jboss.query.SearchQuery;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 public class JqlBuilder {
 
@@ -19,8 +17,8 @@ public class JqlBuilder {
 
     public static String build(SearchQuery searchQuery) {
         List<String> predicates = new ArrayList<>();
-        searchQuery.getStatuses().flatMap(JqlBuilder::createQuerySet)
-                .ifPresent(set -> predicates.add(Predicate.IN.apply(STATUS, set)));
+        searchQuery.getStatuses().filter(issueStatuses -> !issueStatuses.isEmpty())
+                .ifPresent(statuses -> predicates.add(Predicate.IN.apply(STATUS, statuses)));
         searchQuery.getAssignee().ifPresent(assignee -> {
             if (searchQuery.isAssigneeNotEmpty()) {
                 predicates.add(Predicate.NON_EMPTY.apply(ASSIGNEE));
@@ -30,29 +28,17 @@ public class JqlBuilder {
                 predicates.add(Predicate.EQUAL.apply(ASSIGNEE, assignee));
             }
         });
-        searchQuery.getComponents().flatMap(JqlBuilder::createQuerySet)
-                .ifPresent(set -> predicates.add(Predicate.IN.apply(COMPONENT, set)));
-        searchQuery.getProjects().flatMap(JqlBuilder::createQuerySet)
-                .ifPresent(set -> predicates.add(Predicate.IN.apply(PROJECT, set)));
+        searchQuery.getComponents().filter(components -> !components.isEmpty())
+                .ifPresent(components -> predicates.add(Predicate.IN.apply(COMPONENT, components)));
+        searchQuery.getProjects().filter(projects -> !projects.isEmpty())
+                .ifPresent(projects -> predicates.add(Predicate.IN.apply(PROJECT, projects)));
         searchQuery.getStartDate().ifPresent(date -> {
             String formattedDate = date.atStartOfDay().format((DateTimeFormatter.ISO_LOCAL_DATE));
             predicates.add(Predicate.GE_THAN.apply(UPDATED, formattedDate));
         });
 
-        searchQuery.getLabels().flatMap(JqlBuilder::createQuerySet)
-                .ifPresent(set -> predicates.add(Predicate.IN.apply(LABEL, set)));
+        searchQuery.getLabels().filter(labels -> !labels.isEmpty())
+                .ifPresent(labels -> predicates.add(Predicate.IN.apply(LABEL, labels)));
         return String.join(Predicate.AND.toString(), predicates).strip();
-    }
-
-    private static Optional<String> createQuerySet(Collection<?> set) {
-        if (set.isEmpty()) {
-            return Optional.empty();
-        }
-
-        return Optional.of("(%s)".formatted(String.join(", ", set.stream().map(JqlBuilder::wrapLiteral).toList())));
-    }
-
-    public static String wrapLiteral(Object o) {
-        return "'%s'".formatted(o);
     }
 }

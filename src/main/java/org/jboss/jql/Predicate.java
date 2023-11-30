@@ -2,6 +2,8 @@ package org.jboss.jql;
 
 import jakarta.annotation.Nonnull;
 
+import java.util.Collection;
+
 public enum Predicate {
     AND("AND"),
     OR("OR"),
@@ -19,11 +21,11 @@ public enum Predicate {
     private final String value;
     private final boolean binary;
 
-    private Predicate(String value) {
+    Predicate(String value) {
         this(value, true);
     }
 
-    private Predicate(String value, boolean binary) {
+    Predicate(String value, boolean binary) {
         this.value = value;
         this.binary = binary;
     }
@@ -31,21 +33,35 @@ public enum Predicate {
     public String apply(@Nonnull String lhs) {
         if (binary) {
             throw new UnsupportedOperationException(
-                    "Predicate %s can't be used only with a single operand".formatted(this.value.strip()));
+                    "Predicate %s can't be used only with a single operand".formatted(this.value));
         }
 
         return " %s %s ".formatted(lhs, value);
     }
 
-    /**
-     * @implNote Wraps {@code rhs} into quotation marks '...' if literal, i.e. not a set as (value1, ...)
-     */
     public String apply(@Nonnull String lhs, @Nonnull String rhs) {
         if (!binary) {
             throw new UnsupportedOperationException(
-                    "Predicate %s can't be used with two operands".formatted(this.value.strip()));
+                    "Predicate %s can't be used with two operands".formatted(this.value));
         }
 
-        return " %s %s %s ".formatted(lhs, value, rhs.startsWith("(") ? rhs : JqlBuilder.wrapLiteral(rhs));
+        return " %s %s %s ".formatted(lhs, value, rhs.startsWith("(") ? rhs : Predicate.wrapLiteral(rhs));
+    }
+
+    public String apply(@Nonnull String lhs, @Nonnull Collection<?> rhs) {
+        if (this != IN) {
+            throw new UnsupportedOperationException(
+                    "Right hand side expression cant be Collection only for %s".formatted(value));
+        }
+
+        if (rhs.size() == 1) {
+            return EQUAL.apply(lhs, rhs.stream().findFirst().get().toString());
+        }
+
+        return " %s %s (%s) ".formatted(lhs, value, String.join(", ", rhs.stream().map(Predicate::wrapLiteral).toList()));
+    }
+
+    private static String wrapLiteral(Object o) {
+        return "'%s'".formatted(o);
     }
 }
