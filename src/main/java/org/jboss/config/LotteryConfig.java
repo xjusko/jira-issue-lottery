@@ -11,7 +11,6 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 
 import java.time.DayOfWeek;
 import java.time.Duration;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -31,7 +30,7 @@ public record LotteryConfig(
 
         public record Project(
                 @JsonProperty(required = true) String project,
-                @JsonDeserialize(as = HashMap.class) Set<String> components,
+                @JsonDeserialize(as = TreeSet.class) Set<String> components,
                 @JsonUnwrapped @JsonProperty(access = JsonProperty.Access.READ_ONLY) Participation participation) {
             // https://stackoverflow.com/a/71539100/6692043
             @JsonCreator

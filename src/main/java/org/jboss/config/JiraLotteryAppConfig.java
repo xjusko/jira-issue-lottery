@@ -10,4 +10,11 @@ public interface JiraLotteryAppConfig {
 
     @WithDefault("50")
     Integer maxResults();
+
+    /**
+     * URL of the public GitHub repository, must be public.
+     * The config file is then expected under .github/ directory
+     * called {@link LotteryConfig#FILE_NAME}
+     */
+    GitHubRawUrl configFileRepo();
 }
