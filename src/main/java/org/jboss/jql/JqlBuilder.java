@@ -32,9 +32,13 @@ public class JqlBuilder {
                 .ifPresent(components -> predicates.add(Predicate.IN.apply(COMPONENT, components)));
         searchQuery.getProjects().filter(projects -> !projects.isEmpty())
                 .ifPresent(projects -> predicates.add(Predicate.IN.apply(PROJECT, projects)));
-        searchQuery.getStartDate().ifPresent(date -> {
+        searchQuery.getAfter().ifPresent(date -> {
             String formattedDate = date.atStartOfDay().format((DateTimeFormatter.ISO_LOCAL_DATE));
             predicates.add(Predicate.GE_THAN.apply(UPDATED, formattedDate));
+        });
+        searchQuery.getBefore().ifPresent(date -> {
+            String formattedDate = date.atStartOfDay().format((DateTimeFormatter.ISO_LOCAL_DATE));
+            predicates.add(Predicate.LE_THAN.apply(UPDATED, formattedDate));
         });
 
         searchQuery.getLabels().filter(labels -> !labels.isEmpty())
