@@ -10,9 +10,9 @@ import org.jboss.processing.state.SingleIssueState;
 import org.jboss.query.IssueStatus;
 import org.jboss.query.SearchQuery;
 
+import java.util.ArrayList;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class StaleIssueCollector extends NewIssuesConsumer implements Executable {
 
@@ -28,7 +28,7 @@ public class StaleIssueCollector extends NewIssuesConsumer implements Executable
     }
 
     private static final class State {
-        List<SingleIssueState> issueStates = new CopyOnWriteArrayList<>();
+        List<SingleIssueState> issueStates = new ArrayList<>();
     }
 
     public static StaleIssueCollector getInstance(JiraEndpoint jiraEndpoint, LotteryConfig lotteryConfig) {
