@@ -22,7 +22,7 @@ public class ConfigDeserializationTest {
         String configFile = """
                 delay: P14D
                 participants:
-                  - username: The-Huginn
+                  - email: The-Huginn@thehuginn.com
                     projects:
                       - project: WFLY
                         components: [Logging]

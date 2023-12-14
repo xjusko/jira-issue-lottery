@@ -15,7 +15,7 @@ Fork this repository to your GitHub account.
       ```yaml
       delay: P14D
       participants:
-        - username: The-Huginn
+        - email: The-Huginn@thehuginn.com
           projects:
             - project: WFLY
               components: [Logging]
@@ -32,8 +32,8 @@ Fork this repository to your GitHub account.
    A list of participants with their preferences for participating in the lottery.
    + List of Participants, mandatory, no default.
    
-   `username`::
-   The GitHub username of the participant.
+   `email`::
+   The email address of the participant, where the notification is sent.
    + String, mandatory, no default.
    
    `projects`::

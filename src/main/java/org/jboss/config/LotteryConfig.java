@@ -23,7 +23,7 @@ public record LotteryConfig(
     public static final String FILE_NAME = "jira-issue-lottery.yml";
 
     public record Participant(
-            @JsonProperty(required = true) String username,
+            @JsonProperty(required = true) String email,
             Set<Project> projects) {
 
         public record Project(
