@@ -62,8 +62,9 @@ public class JiraIssueLotteryCommand implements Runnable {
     public void run() {
         NewIssueCollector newIssueCollector = NewIssueCollector.getInstance(jiraEndpoint);
         Exchange exchange = jiraEndpoint.createExchange();
+        LotteryConfig lotteryConfig;
         try {
-            LotteryConfig lotteryConfig = objectMapper.readValue(
+            lotteryConfig = objectMapper.readValue(
                     new URI(jiraLotteryAppConfig.configFileRepo().getRawContentsUrl()).toURL(),
                     LotteryConfig.class);
             Log.info(lotteryConfig);
@@ -71,7 +72,7 @@ public class JiraIssueLotteryCommand implements Runnable {
             throw new RuntimeException(e);
         }
         try {
-            newIssueCollector.execute().getIssueStates().forEach(Log::info);
+            newIssueCollector.execute(lotteryConfig);
             new IssueProcessor(jiraEndpoint, "JBEAP-25900").process(exchange);
         } catch (Exception e) {
             throw new RuntimeException(e);
