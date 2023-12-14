@@ -1,5 +1,6 @@
 package org.jboss;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.quarkus.logging.Log;
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
@@ -9,10 +10,15 @@ import org.apache.camel.component.jira.JiraComponent;
 import org.apache.camel.component.jira.JiraConfiguration;
 import org.apache.camel.component.jira.JiraEndpoint;
 import org.jboss.config.JiraLotteryAppConfig;
-import org.jboss.processing.NewIssueCollector;
+import org.jboss.config.LotteryConfig;
 import org.jboss.processing.IssueProcessor;
+import org.jboss.processing.NewIssueCollector;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 @Command(name = "jira-issue-lottery", mixinStandardHelpOptions = true)
 public class JiraIssueLotteryCommand implements Runnable {
@@ -49,10 +55,21 @@ public class JiraIssueLotteryCommand implements Runnable {
         return jiraConfiguration;
     }
 
+    @Inject
+    ObjectMapper objectMapper;
+
     @Override
     public void run() {
         NewIssueCollector newIssueCollector = NewIssueCollector.getInstance(jiraEndpoint);
         Exchange exchange = jiraEndpoint.createExchange();
+        try {
+            LotteryConfig lotteryConfig = objectMapper.readValue(
+                    new URI(jiraLotteryAppConfig.configFileRepo().getRawContentsUrl()).toURL(),
+                    LotteryConfig.class);
+            Log.info(lotteryConfig);
+        } catch (IOException | URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
         try {
             newIssueCollector.execute().getIssueStates().forEach(Log::info);
             new IssueProcessor(jiraEndpoint, "JBEAP-25900").process(exchange);

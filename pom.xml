@@ -58,6 +58,11 @@
       <artifactId>quarkus-junit5</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-yaml</artifactId>
+      <version>2.16.0</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -157,13 +162,12 @@
         </executions>
         <dependencies>
           <dependency>
-            <artifactId>quarkus-ide-config</artifactId>
             <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-ide-config</artifactId>
             <version>${quarkus.platform.version}</version>
           </dependency>
         </dependencies>
         <configuration>
-          <!-- store outside of target to speed up formatting when mvn clean is used -->
           <cachedir>.cache/formatter-maven-plugin-${formatter-maven-plugin.version}</cachedir>
           <configFile>eclipse-format.xml</configFile>
           <lineEnding>LF</lineEnding>
