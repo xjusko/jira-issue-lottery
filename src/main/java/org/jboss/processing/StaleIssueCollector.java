@@ -4,8 +4,8 @@ import com.atlassian.jira.rest.client.api.domain.Issue;
 import io.quarkus.logging.Log;
 import org.apache.camel.component.jira.JiraEndpoint;
 import org.apache.camel.component.jira.consumer.NewIssuesConsumer;
+import org.jboss.config.LotteryConfig;
 import org.jboss.jql.JqlBuilder;
-import org.jboss.processing.state.EveryIssueState;
 import org.jboss.processing.state.SingleIssueState;
 import org.jboss.query.IssueStatus;
 import org.jboss.query.SearchQuery;
@@ -13,7 +13,7 @@ import org.jboss.query.SearchQuery;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class StaleIssueCollector extends NewIssuesConsumer implements Executable<EveryIssueState> {
+public class StaleIssueCollector extends NewIssuesConsumer implements Executable {
 
     private static final State state = new State();
 
@@ -39,9 +39,8 @@ public class StaleIssueCollector extends NewIssuesConsumer implements Executable
     }
 
     @Override
-    public EveryIssueState execute() throws Exception {
+    public void execute(LotteryConfig lotteryConfig) throws Exception {
         int issuesCount = doPoll();
         Log.infof("Found number of issues %d", issuesCount);
-        return new EveryIssueState(state.issueStates);
     }
 }
