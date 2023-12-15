@@ -10,6 +10,7 @@ import org.jboss.processing.state.SingleIssueState;
 import org.jboss.query.IssueStatus;
 import org.jboss.query.SearchQuery;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -30,9 +31,9 @@ public class StaleIssueCollector extends NewIssuesConsumer implements Executable
         List<SingleIssueState> issueStates = new CopyOnWriteArrayList<>();
     }
 
-    public static StaleIssueCollector getInstance(JiraEndpoint jiraEndpoint) {
-        // TODO add stale period for SearchBuilder.endDate
-        SearchQuery searchQuery = SearchQuery.builder().projects("WFLY").assigneeNotEmpty()
+    public static StaleIssueCollector getInstance(JiraEndpoint jiraEndpoint, LotteryConfig lotteryConfig) {
+        SearchQuery searchQuery = SearchQuery.builder().projects("WFLY")
+                .before(LocalDate.now().minusDays(lotteryConfig.delay().toDays())).assigneeNotEmpty()
                 .status(IssueStatus.CREATED, IssueStatus.ASSIGNED, IssueStatus.POST).build();
         jiraEndpoint.setJql(JqlBuilder.build(searchQuery));
         return new StaleIssueCollector(jiraEndpoint);

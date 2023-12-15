@@ -59,8 +59,8 @@ public class SearchQueryTest {
                     case getAssignee -> Assertions.assertTrue(query.getAssignee().isPresent());
                     case getProjects -> Assertions.assertTrue(query.getProjects().isPresent());
                     case getComponents -> Assertions.assertTrue(query.getComponents().isPresent());
-                    case getStartDate -> Assertions.assertTrue(query.getStartDate().isPresent());
-                    case getEndDate -> Assertions.assertTrue(query.getEndDate().isPresent());
+                    case getStartDate -> Assertions.assertTrue(query.getAfter().isPresent());
+                    case getEndDate -> Assertions.assertTrue(query.getBefore().isPresent());
                     case getMaxResults -> Assertions.assertTrue(query.getMaxResults().isPresent());
                     case getLabels -> Assertions.assertTrue(query.getLabels().isPresent());
                 }
@@ -70,8 +70,8 @@ public class SearchQueryTest {
                     case getAssignee -> Assertions.assertTrue(query.getAssignee().isEmpty());
                     case getProjects -> Assertions.assertTrue(query.getProjects().isEmpty());
                     case getComponents -> Assertions.assertTrue(query.getComponents().isEmpty());
-                    case getStartDate -> Assertions.assertTrue(query.getStartDate().isEmpty());
-                    case getEndDate -> Assertions.assertTrue(query.getEndDate().isEmpty());
+                    case getStartDate -> Assertions.assertTrue(query.getAfter().isEmpty());
+                    case getEndDate -> Assertions.assertTrue(query.getBefore().isEmpty());
                     case getMaxResults -> Assertions.assertTrue(query.getMaxResults().isEmpty());
                     case getLabels -> Assertions.assertTrue(query.getLabels().isEmpty());
                 }

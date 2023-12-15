@@ -7,6 +7,8 @@ import org.jboss.query.SearchQuery;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+
 @QuarkusTest
 public class JqlFromSearchQueryTest {
 
@@ -82,5 +84,14 @@ public class JqlFromSearchQueryTest {
     void assigneeEmptyQueryTest() {
         searchQuery = SearchQuery.builder().assigneeEmpty().build();
         Assertions.assertEquals("assignee IS EMPTY", JqlBuilder.build(searchQuery));
+    }
+
+    @Test
+    void beforeClauseQueryTest() {
+        LocalDate before = LocalDate.now().minusDays(3);
+        searchQuery = SearchQuery.builder()
+                .before(before)
+                .build();
+        Assertions.assertEquals("updated <= '%s'".formatted(before.toString()), JqlBuilder.build(searchQuery));
     }
 }

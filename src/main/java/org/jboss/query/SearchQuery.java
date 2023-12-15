@@ -35,10 +35,10 @@ public class SearchQuery {
         this.labels = labels;
 
         if (startDate != null && startDate.isAfter(LocalDate.now()))
-            throw new IllegalArgumentException("startDate cannot be in the future.");
+            throw new IllegalArgumentException("after parameter cannot be in the future.");
 
         if (endDate != null && endDate.isAfter(LocalDate.now()))
-            throw new IllegalArgumentException("endDate cannot be in the future.");
+            throw new IllegalArgumentException("before parameter cannot be in the future.");
     }
 
     public Optional<List<IssueStatus>> getStatuses() {
@@ -65,11 +65,11 @@ public class SearchQuery {
         return Optional.ofNullable(components);
     }
 
-    public Optional<LocalDate> getStartDate() {
+    public Optional<LocalDate> getAfter() {
         return Optional.ofNullable(startDate);
     }
 
-    public Optional<LocalDate> getEndDate() {
+    public Optional<LocalDate> getBefore() {
         return Optional.ofNullable(endDate);
     }
 
@@ -129,12 +129,12 @@ public class SearchQuery {
             return this;
         }
 
-        public Builder startDate(LocalDate startDate) {
+        public Builder after(LocalDate startDate) {
             this.startDate = startDate;
             return this;
         }
 
-        public Builder endDate(LocalDate endDate) {
+        public Builder before(LocalDate endDate) {
             this.endDate = endDate;
             return this;
         }
