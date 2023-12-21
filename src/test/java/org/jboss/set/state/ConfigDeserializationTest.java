@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
-import org.jboss.config.GitHubRawUrl;
 import org.jboss.config.LotteryConfig;
+import org.jboss.config.GitHubRawUrl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -26,13 +26,18 @@ public class ConfigDeserializationTest {
                     projects:
                       - project: WFLY
                         components: [Logging]
-                        maxIssues: 5""";
+                        maxIssues: 5
+                availableProjects:
+                  WFLY:
+                    - Logging
+                    - JMS
+                """;
 
         Assertions.assertTrue(objectMapper.getFactory() instanceof YAMLFactory);
         try {
             objectMapper.readValue(configFile, LotteryConfig.class);
         } catch (IOException e) {
-            Assertions.fail("Expecting no problem deserializing the config file %s");
+            Assertions.fail("Expecting no problem deserializing the config file, but encountered an error", e);
         }
     }
 

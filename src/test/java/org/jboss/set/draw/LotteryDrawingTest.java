@@ -146,7 +146,17 @@ public class LotteryDrawingTest extends CamelQuarkusTestSupport {
                     projects:
                       - project: WFLY
                         components: [Logging, Documentation]
-                        maxIssues: 5""";
+                        maxIssues: 5
+                availableProjects:
+                  WFLY:
+                    - Logging
+                    - JMS
+                  ELY:
+                    - HTTP
+                    - REALMS
+                  UNDERTOW:
+                    - Servlet
+                    - Core""";
 
         LotteryConfig testLotteryConfig = objectMapper.readValue(configFile, LotteryConfig.class);
         when(lotteryConfigProducer.getLotteryConfig()).thenReturn(testLotteryConfig);
@@ -174,7 +184,17 @@ public class LotteryDrawingTest extends CamelQuarkusTestSupport {
                     days: [MONDAY]
                     projects:
                       - project: WFLY
-                        maxIssues: 5""";
+                        maxIssues: 5
+                availableProjects:
+                  WFLY:
+                    - Logging
+                    - JMS
+                  ELY:
+                    - HTTP
+                    - REALMS
+                  UNDERTOW:
+                    - Servlet
+                    - Core""";
 
         LotteryConfig testLotteryConfig = objectMapper.readValue(configFile, LotteryConfig.class);
         when(lotteryConfigProducer.getLotteryConfig()).thenReturn(testLotteryConfig);
@@ -206,7 +226,17 @@ public class LotteryDrawingTest extends CamelQuarkusTestSupport {
                         maxIssues: 5
                       - project: RESTEASY
                         components: [Logging]
-                        maxIssues: 5""";
+                        maxIssues: 5
+                availableProjects:
+                  WFLY:
+                    - Logging
+                    - JMS
+                  ELY:
+                    - HTTP
+                    - REALMS
+                  UNDERTOW:
+                    - Servlet
+                    - Core""";
 
         LotteryConfig testLotteryConfig = objectMapper.readValue(configFile, LotteryConfig.class);
         when(lotteryConfigProducer.getLotteryConfig()).thenReturn(testLotteryConfig);
@@ -235,7 +265,17 @@ public class LotteryDrawingTest extends CamelQuarkusTestSupport {
                     projects:
                       - project: WFLY
                         components: [Documentation]
-                        maxIssues: 5""";
+                        maxIssues: 5
+                availableProjects:
+                  WFLY:
+                    - Logging
+                    - JMS
+                  ELY:
+                    - HTTP
+                    - REALMS
+                  UNDERTOW:
+                    - Servlet
+                    - Core""";
 
         LotteryConfig testLotteryConfig = objectMapper.readValue(configFile, LotteryConfig.class);
         when(lotteryConfigProducer.getLotteryConfig()).thenReturn(testLotteryConfig);
@@ -265,7 +305,17 @@ public class LotteryDrawingTest extends CamelQuarkusTestSupport {
                     projects:
                       - project: WFLY
                         components: [Documentation]
-                        maxIssues: 5""";
+                        maxIssues: 5
+                availableProjects:
+                  WFLY:
+                    - Logging
+                    - JMS
+                  ELY:
+                    - HTTP
+                    - REALMS
+                  UNDERTOW:
+                    - Servlet
+                    - Core""";
 
         LotteryConfig testLotteryConfig = objectMapper.readValue(configFile, LotteryConfig.class);
         when(lotteryConfigProducer.getLotteryConfig()).thenReturn(testLotteryConfig);
@@ -297,7 +347,17 @@ public class LotteryDrawingTest extends CamelQuarkusTestSupport {
                         maxIssues: 5
                       - project: RESTEASY
                         components: [Documentation]
-                        maxIssues: 5""";
+                        maxIssues: 5
+                availableProjects:
+                  WFLY:
+                    - Logging
+                    - JMS
+                  ELY:
+                    - HTTP
+                    - REALMS
+                  UNDERTOW:
+                    - Servlet
+                    - Core""";
 
         LotteryConfig testLotteryConfig = objectMapper.readValue(configFile, LotteryConfig.class);
         when(lotteryConfigProducer.getLotteryConfig()).thenReturn(testLotteryConfig);
@@ -329,7 +389,17 @@ public class LotteryDrawingTest extends CamelQuarkusTestSupport {
                     projects:
                       - project: RESTEASY
                         components: [Logging]
-                        maxIssues: 5""";
+                        maxIssues: 5
+                availableProjects:
+                  WFLY:
+                    - Logging
+                    - JMS
+                  ELY:
+                    - HTTP
+                    - REALMS
+                  UNDERTOW:
+                    - Servlet
+                    - Core""";
 
         LotteryConfig testLotteryConfig = objectMapper.readValue(configFile, LotteryConfig.class);
         when(lotteryConfigProducer.getLotteryConfig()).thenReturn(testLotteryConfig);
@@ -363,7 +433,17 @@ public class LotteryDrawingTest extends CamelQuarkusTestSupport {
                     projects:
                       - project: WELD
                         components: [Logging]
-                        maxIssues: 1""";
+                        maxIssues: 1
+                availableProjects:
+                  WFLY:
+                    - Logging
+                    - JMS
+                  ELY:
+                    - HTTP
+                    - REALMS
+                  UNDERTOW:
+                    - Servlet
+                    - Core""";
 
         LotteryConfig testLotteryConfig = objectMapper.readValue(configFile, LotteryConfig.class);
         when(lotteryConfigProducer.getLotteryConfig()).thenReturn(testLotteryConfig);

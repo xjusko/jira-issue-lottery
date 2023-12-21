@@ -18,12 +18,16 @@ public class LotteryConfigProducer {
     @Inject
     JiraLotteryAppConfig jiraLotteryAppConfig;
 
+    @Inject
+    LotteryConfigValidation lotteryConfigValidation;
+
     public LotteryConfig getLotteryConfig() {
         if (lotteryConfig == null) {
             try {
                 lotteryConfig = objectMapper.readValue(
                         new URI(jiraLotteryAppConfig.configFileRepo().getRawContentsUrl()).toURL(),
                         LotteryConfig.class);
+                lotteryConfigValidation.validate(lotteryConfig);
             } catch (IOException | URISyntaxException e) {
                 throw new RuntimeException(e);
             }
