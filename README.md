@@ -4,6 +4,67 @@ This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
 
+## Set up the app
+
+### Fork the Repository
+Fork this repository to your GitHub account.
+
+### Configure JIRA Lottery
+1. Write a valid `jira-issue-lottery.yml` config in the `.github` directory in your forked repository.
+    - **Valid Config Example:**
+      ```yaml
+      delay: P14D
+      participants:
+        - username: The-Huginn
+          projects:
+            - project: WFLY
+              components: [Logging]
+              maxIssues: 5
+            - project: ELY
+              components: [HTTP, Core]
+              maxIssues: 3
+      ```
+   `delay`::
+   The duration of the lottery cycle before participants are selected again.
+   + Duration as a String in ISO-8601 format, mandatory, no default.
+   
+   `participants`::
+   A list of participants with their preferences for participating in the lottery.
+   + List of Participants, mandatory, no default.
+   
+   `username`::
+   The GitHub username of the participant.
+   + String, mandatory, no default.
+   
+   `projects`::
+   The list of JIRA projects the participant is interested in, each with specific components and maximum allowed issues.
+   + List of Projects, mandatory, no default.
+   
+   `project`::
+   The name of the JIRA project.
+   + String, mandatory, no default.
+   
+   `components`::
+   The specific components within the project that the participant is interested in.
+   + List of Strings, mandatory, no default.
+   
+   `maxIssues`::
+   The maximum number of issues the participant is willing to take for the specified project and components.
+   + Integer, mandatory, no default.
+
+
+2. Commit and push the changes to your forked repository.
+
+### Configure Application Properties
+1. Change the value of `jira-issue-lottery.config-file-repo` in the `application.properties` file to point to a public repository with a valid config file according to first step in [Configuration section](#configure-jira-lottery) such as `https://github.com/jboss-set/jira-issue-lottery`.
+
+### Create .env File
+1. Create a `.env` file in the main directory of your app.
+2. Create a Jira Personal Access Token ([Guide on how to create the token](https://confluence.atlassian.com/enterprise/using-personal-access-tokens-1026032365.html))
+3. Add the following variable to the `.env` file:
+   ```env
+   jira-issue-lottery.access-token=<YOUR TOKEN>
+   
 ## Running the application in dev mode
 
 You can run your application in dev mode that enables live coding using:
