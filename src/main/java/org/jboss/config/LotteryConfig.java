@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
-import java.time.DayOfWeek;
 import java.time.Duration;
 import java.util.List;
 import java.util.Set;
@@ -25,7 +24,6 @@ public record LotteryConfig(
 
     public record Participant(
             @JsonProperty(required = true) String username,
-            @JsonDeserialize(as = TreeSet.class) Set<DayOfWeek> days,
             Set<Project> projects) {
 
         public record Project(
