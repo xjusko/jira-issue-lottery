@@ -23,7 +23,6 @@ public class ConfigDeserializationTest {
                 delay: P14D
                 participants:
                   - username: The-Huginn
-                    days: [MONDAY]
                     projects:
                       - project: WFLY
                         components: [Logging]
