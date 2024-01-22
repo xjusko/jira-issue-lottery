@@ -1,11 +1,11 @@
-package org.jboss.processing.state;
+package org.jboss.set.processing.state;
 
 import com.atlassian.jira.rest.client.api.domain.BasicComponent;
 import com.atlassian.jira.rest.client.api.domain.BasicIssue;
 import com.atlassian.jira.rest.client.api.domain.BasicProject;
 import com.atlassian.jira.rest.client.api.domain.Issue;
 import com.atlassian.jira.rest.client.api.domain.User;
-import org.jboss.query.IssueStatus;
+import org.jboss.set.query.IssueStatus;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,7 +1,7 @@
 /**
  * This file is inspired by Quarkus GitHub lottery - https://github.com/quarkusio/quarkus-github-lottery/blob/b0da185b00151eb0c2f2d0f19e91e76b7aedf020/src/main/java/io/quarkus/github/lottery/config/LotteryConfig.java
  */
-package org.jboss.config;
+package org.jboss.set.config;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -1,4 +1,4 @@
-package org.jboss.testing;
+package org.jboss.set.testing;
 
 import jakarta.inject.Qualifier;
 

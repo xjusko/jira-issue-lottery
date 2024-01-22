@@ -1,7 +1,7 @@
 /**
  * This file is inspired by https://github.com/jboss-set/aphrodite
  */
-package org.jboss.query;
+package org.jboss.set.query;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

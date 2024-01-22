@@ -21,7 +21,7 @@ import com.atlassian.jira.rest.client.api.domain.TimeTracking;
 import com.atlassian.jira.rest.client.api.domain.User;
 import com.atlassian.jira.rest.client.api.domain.Version;
 import com.atlassian.jira.rest.client.api.domain.Worklog;
-import org.jboss.query.IssueStatus;
+import org.jboss.set.query.IssueStatus;
 import org.joda.time.DateTime;
 
 import java.net.URI;

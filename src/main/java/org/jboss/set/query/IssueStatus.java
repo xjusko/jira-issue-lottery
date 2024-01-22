@@ -1,4 +1,4 @@
-package org.jboss.query;
+package org.jboss.set.query;
 
 import java.util.HashMap;
 import java.util.Map;

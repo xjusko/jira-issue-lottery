@@ -1,8 +1,8 @@
 package org.jboss.set.jql;
 
 import io.quarkus.test.junit.QuarkusTest;
-import org.jboss.query.IssueStatus;
-import org.jboss.query.SearchQuery;
+import org.jboss.set.query.IssueStatus;
+import org.jboss.set.query.SearchQuery;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

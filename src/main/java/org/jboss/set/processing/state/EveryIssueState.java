@@ -1,4 +1,4 @@
-package org.jboss.processing.state;
+package org.jboss.set.processing.state;
 
 import java.util.ArrayList;
 import java.util.List;

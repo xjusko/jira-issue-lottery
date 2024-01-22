@@ -1,7 +1,7 @@
 package org.jboss.set.state;
 
 import io.quarkus.test.junit.QuarkusTest;
-import org.jboss.query.IssueStatus;
+import org.jboss.set.query.IssueStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +15,7 @@ public class IssueStatusTest {
 
     /**
      * We check only for number of distinguished entries.
-     * In the next text we check for identity of {@code org.jboss.query.IssueStatus}.
+     * In the next text we check for identity of {@code org.jboss.set.query.IssueStatus}.
      * So if we have multiple same entries we would count them as a single one.
      */
     @Test

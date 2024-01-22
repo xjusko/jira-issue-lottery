@@ -1,4 +1,4 @@
-package org.jboss.config;
+package org.jboss.set.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.enterprise.context.ApplicationScoped;

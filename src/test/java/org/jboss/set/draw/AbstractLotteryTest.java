@@ -25,11 +25,11 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.component.jira.JiraEndpoint;
 import org.apache.camel.quarkus.test.CamelQuarkusTestSupport;
 import org.apache.camel.spi.Registry;
-import org.jboss.JiraEndpointProducer;
-import org.jboss.JiraIssueLotteryCommand;
-import org.jboss.config.LotteryConfigProducer;
+import org.jboss.set.JiraEndpointProducer;
+import org.jboss.set.JiraIssueLotteryCommand;
+import org.jboss.set.config.LotteryConfigProducer;
 import org.jboss.set.helper.MockedSearchRestClientProducer;
-import org.jboss.testing.JiraCommand;
+import org.jboss.set.testing.JiraCommand;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -71,7 +71,7 @@ public abstract class AbstractLotteryTest extends CamelQuarkusTestSupport {
     CamelContext camelContext;
 
     protected List<Issue> issues;
-    protected List<org.jboss.draw.entities.Issue> ourIssues;
+    protected List<org.jboss.set.draw.entities.Issue> ourIssues;
 
     protected abstract List<Issue> setupIssues();
 
@@ -115,7 +115,7 @@ public abstract class AbstractLotteryTest extends CamelQuarkusTestSupport {
     @Override
     protected CamelContext createCamelContext() throws Exception {
         issues = setupIssues();
-        ourIssues = issues.stream().map(org.jboss.draw.entities.Issue::new).toList();
+        ourIssues = issues.stream().map(org.jboss.set.draw.entities.Issue::new).toList();
         setMocks();
         return camelContext;
     }

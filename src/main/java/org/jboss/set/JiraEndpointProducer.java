@@ -1,4 +1,4 @@
-package org.jboss;
+package org.jboss.set;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import org.apache.camel.component.jira.JiraComponent;
