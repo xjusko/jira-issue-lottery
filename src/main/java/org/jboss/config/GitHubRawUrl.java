@@ -30,7 +30,7 @@ public class GitHubRawUrl {
     public static class GitHubRepoToRawUrlConverter implements Converter<GitHubRawUrl> {
 
         private static final String RAW_CONTENTS = "https://raw.githubusercontent.com";
-        private static final String RELATIVE_PATH = "main/.github/" + LotteryConfig.FILE_NAME;
+        public static final String RELATIVE_PATH = "main/.github/" + LotteryConfig.FILE_NAME;
 
         public GitHubRepoToRawUrlConverter() {
         }
