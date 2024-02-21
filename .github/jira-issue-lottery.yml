@@ -5,3 +5,12 @@ participants:
       - project: WFLY
         components: [Logging]
         maxIssues: 5
+  - email: mstefank@redhat.com
+    projects:
+      - project: WFLY
+        maxIssues: 10
+      - project: WFCORE
+        maxIssues: 10
+      - project: JBTM
+        maxIssues: 10
+
