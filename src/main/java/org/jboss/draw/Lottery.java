@@ -91,8 +91,9 @@ public class Lottery {
 
     private boolean isAssignable(Issue issue, Participant participant) {
         Tuple2<Integer, Set<String>> issuesComponentsKey = participant.getProjectComponents(issue.getProject());
-        return issuesComponentsKey.getItem1() != 0 &&
+        boolean betweenComponents = issuesComponentsKey.getItem2() == null ||
                 issuesComponentsKey.getItem2().containsAll(issue.getComponents());
+        return issuesComponentsKey.getItem1() != 0 && betweenComponents;
     }
 
     public static String createEmailText(String email, List<Issue> issues) {

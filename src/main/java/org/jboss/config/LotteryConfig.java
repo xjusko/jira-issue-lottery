@@ -32,7 +32,7 @@ public record LotteryConfig(
                 @JsonUnwrapped @JsonProperty(access = JsonProperty.Access.READ_ONLY) Participation participation) {
             // https://stackoverflow.com/a/71539100/6692043
             @JsonCreator
-            public Project(@JsonProperty(required = true) String project, @JsonProperty(required = true) Set<String> components,
+            public Project(@JsonProperty(required = true) String project, Set<String> components,
                     @JsonProperty(required = true) int maxIssues) {
                 this(project, components, new Participation(maxIssues));
             }
