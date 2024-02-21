@@ -1,0 +1,7 @@
+delay: P14D
+participants:
+  - email: rbudinsk@redhat.com
+    projects:
+      - project: WFLY
+        components: [Logging]
+        maxIssues: 5
