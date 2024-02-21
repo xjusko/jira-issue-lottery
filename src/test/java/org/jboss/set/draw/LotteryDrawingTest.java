@@ -42,6 +42,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import static org.apache.camel.component.jira.JiraConstants.JIRA_REST_CLIENT_FACTORY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -289,9 +290,11 @@ public class LotteryDrawingTest extends CamelQuarkusTestSupport {
 
         List<Mail> sent = mailbox.getMailsSentTo(email);
         assertEquals(1, sent.size());
-        // Check directly for this URL as we know it is valid one. Using templates might result in a corrupted URL overall
-        assertTrue(sent.get(0).getText()
-                .contains("https://github.com/The-Huginn/jira-issue-lottery/blob/main/.github/jira-issue-lottery.yml"));
+        String emailText = sent.get(0).getText();
+
+        // Use the regex pattern to check if the email text contains a matching URL
+        String expectedUrlPattern = "https://github\\.com/[a-zA-Z0-9-]+/jira-issue-lottery/blob/main/\\.github/jira-issue-lottery\\.yml";
+        assertTrue(Pattern.compile(expectedUrlPattern).matcher(emailText).find());
     }
 
     @Test

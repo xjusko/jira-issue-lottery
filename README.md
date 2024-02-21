@@ -23,6 +23,13 @@ Fork this repository to your GitHub account.
             - project: ELY
               components: [HTTP, Core]
               maxIssues: 3
+      availableProjects:
+        WFLY:
+          - Logging
+          - JMS
+        ELY:
+          - HTTP
+          - Core
       ```
    `delay`::
    The duration of the lottery cycle before participants are selected again.
@@ -55,13 +62,14 @@ Fork this repository to your GitHub account.
 
 2. Commit and push the changes to your forked repository.
 
-### Configure Application Properties
-1. Change the value of `jira-issue-lottery.config-file-repo` in the `application.properties` file to point to a public repository with a valid config file according to first step in [Configuration section](#configure-jira-lottery) such as `https://github.com/jboss-set/jira-issue-lottery`.
 
 ### Create .env File
 1. Create a `.env` file in the main directory of your app.
-2. Create a Jira Personal Access Token ([Guide on how to create the token](https://confluence.atlassian.com/enterprise/using-personal-access-tokens-1026032365.html))
-3. Add the following variable to the `.env` file:
+2. Add the value of `jira-issue-lottery.config-file-repo` in the `.env` file to point to a public repository with a valid config file according to first step in [Configuration section](#configure-jira-lottery) such as `https://github.com/jboss-set/jira-issue-lottery`.
+      ```env
+   jira-issue-lottery.config-file-repo=<YOUR REPOSITORY URL>
+3. Create a Jira Personal Access Token ([Guide on how to create the token](https://confluence.atlassian.com/enterprise/using-personal-access-tokens-1026032365.html))
+4. Add the following variable to the `.env` file:
    ```env
    jira-issue-lottery.access-token=<YOUR TOKEN>
    
