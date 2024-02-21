@@ -65,6 +65,35 @@ Fork this repository to your GitHub account.
    ```env
    jira-issue-lottery.access-token=<YOUR TOKEN>
    
+## Production deployment
+1. Log into your Openshift
+```shell
+oc login ...
+```
+2. Create secret
+```shell
+oc create secret generic jira-lottery
+--from-literal=JIRA_ISSUE_LOTTERY_ACCESS_TOKEN={TBD}
+--from-literal=QUARKUS_MAILER_FROM={TBD}
+--from-literal=QUARKUS_MAILER_USERNAME={TBD}
+--from-literal=QUARKUS_MAILER_PASSWORD={TBD}
+```
+3. Build the application, this step will eventually fail
+> **_NOTE:_**  You can use script `deploy.sh` for convenience.
+```shell
+./mvnw clean package -Dquarkus.openshift.deploy=true
+```
+4. Update CronJob deployment
+```shell
+cd target/kubernetes
+```
+And in file `openshift.yml` delete the following line `selector: {}`
+5. Deploy the YAML file
+```shell
+oc apply -f openshift.yml
+```
+
+   
 ## Running the application in dev mode
 
 You can run your application in dev mode that enables live coding using:
