@@ -165,6 +165,34 @@ public class LotteryDrawingTest extends CamelQuarkusTestSupport {
     }
 
     @Test
+    public void testAssigningOneIssueOnlyProjectDefined() throws Exception {
+        String email = "The-Huginn@thehuginn.com";
+        String configFile = """
+                delay: P14D
+                participants:
+                  - email: The-Huginn@thehuginn.com
+                    days: [MONDAY]
+                    projects:
+                      - project: WFLY
+                        maxIssues: 5""";
+
+        LotteryConfig testLotteryConfig = objectMapper.readValue(configFile, LotteryConfig.class);
+        when(lotteryConfigProducer.getLotteryConfig()).thenReturn(testLotteryConfig);
+
+        StringWriter sw = new StringWriter();
+        CommandLine cmd = new CommandLine(app);
+        cmd.setOut(new PrintWriter(sw));
+
+        int exitCode = cmd.execute();
+        assertEquals(0, exitCode);
+
+        List<Mail> sent = mailbox.getMailsSentTo(email);
+        assertEquals(1, sent.size());
+        assertEquals(Lottery.EMAIL_SUBJECT, sent.get(0).getSubject());
+        assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(0))), sent.get(0).getText());
+    }
+
+    @Test
     public void testAssigningAllIssues() throws Exception {
         String email = "The-Huginn@thehuginn.com";
         String configFile = """
