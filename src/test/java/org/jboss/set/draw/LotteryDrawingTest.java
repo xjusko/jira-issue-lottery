@@ -289,9 +289,11 @@ public class LotteryDrawingTest extends CamelQuarkusTestSupport {
 
         List<Mail> sent = mailbox.getMailsSentTo(email);
         assertEquals(1, sent.size());
-        // Check directly for this URL as we know it is valid one. Using templates might result in a corrupted URL overall
-        assertTrue(sent.get(0).getText()
-                .contains("https://github.com/The-Huginn/jira-issue-lottery/blob/main/.github/jira-issue-lottery.yml"));
+        String emailText = sent.get(0).getText();
+
+        //Checks only if email message is correctly formatted. The URL is only for test purpose and may be invalid.
+        String expectedUrl = "https://github.com/jboss-set/jira-issue-lottery/blob/main/.github/jira-issue-lottery.yml";
+        assertTrue(emailText.contains(expectedUrl));
     }
 
     @Test

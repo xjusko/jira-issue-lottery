@@ -23,6 +23,13 @@ Fork this repository to your GitHub account.
             - project: ELY
               components: [HTTP, Core]
               maxIssues: 3
+      availableProjects:
+        WFLY:
+          - Logging
+          - JMS
+        ELY:
+          - HTTP
+          - Core
       ```
    `delay`::
    The duration of the lottery cycle before participants are selected again.
@@ -52,16 +59,23 @@ Fork this repository to your GitHub account.
    The maximum number of issues the participant is willing to take for the specified project and components.
    + Integer, mandatory, no default.
 
+   `availableProjects`::
+   A dictionary specifying the available JIRA projects and their components. Participants use this information to make their preferences in the `projects` section.
+   + Dictionary, mandatory, no default.
+
+
 
 2. Commit and push the changes to your forked repository.
 
-### Configure Application Properties
-1. Change the value of `jira-issue-lottery.config-file-repo` in the `application.properties` file to point to a public repository with a valid config file according to first step in [Configuration section](#configure-jira-lottery) such as `https://github.com/jboss-set/jira-issue-lottery`.
 
 ### Create .env File
 1. Create a `.env` file in the main directory of your app.
-2. Create a Jira Personal Access Token ([Guide on how to create the token](https://confluence.atlassian.com/enterprise/using-personal-access-tokens-1026032365.html))
-3. Add the following variable to the `.env` file:
+2. Add the value of `%dev.jira-issue-lottery.config-file-repo` in the `.env` file to point to a public repository with a valid config file according to first step in [Configuration section](#configure-jira-lottery) such as `https://github.com/jboss-set/jira-issue-lottery`.
+      ```env
+   %dev.jira-issue-lottery.config-file-repo=<YOUR REPOSITORY URL>
+> **NOTE** This will override the default value specified in `application.properties` file. If you override the value for all modes (dev, test, prod, when you don't prepend a mode, such as `%dev`), then one of the tests will fail, as it expects the original value.
+3. Create a Jira Personal Access Token ([Guide on how to create the token](https://confluence.atlassian.com/enterprise/using-personal-access-tokens-1026032365.html))
+4. Add the following variable to the `.env` file:
    ```env
    jira-issue-lottery.access-token=<YOUR TOKEN>
    
