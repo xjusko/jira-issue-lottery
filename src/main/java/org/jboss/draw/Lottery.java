@@ -34,7 +34,7 @@ public class Lottery {
     private Mailer mailer;
 
     private static final Pattern USERNAME_FROM_EMAIL = Pattern.compile("\\s*(\\b[a-zA-Z0-9._%+-]+)@");
-    public static final String EMAIL_SUBJECT = "Subject";
+    public static final String EMAIL_SUBJECT = "This week's lottery issues picked for You";
     private static final String EMAIL_BODY = """
             Hi %s,
 
@@ -100,7 +100,7 @@ public class Lottery {
         Matcher matcher = USERNAME_FROM_EMAIL.matcher(email);
         String username = matcher.find() ? matcher.group(1) : "Somebody";
         return EMAIL_BODY.formatted(username,
-                issues.stream().map(issue -> issue.getUri().toString()).collect(Collectors.joining("\n")),
+                issues.stream().map(issue -> issue.getBrowseUri().toString()).collect(Collectors.joining("\n")),
                 configFileUrl());
     }
 
