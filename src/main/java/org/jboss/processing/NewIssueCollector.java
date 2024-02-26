@@ -37,7 +37,8 @@ public class NewIssueCollector extends NewIssuesConsumer implements Executable {
     }
 
     public static NewIssueCollector getInstance(JiraEndpoint jiraEndpoint) {
-        SearchQuery searchQuery = SearchQuery.builder().projects("WFLY").status(IssueStatus.NEW).assigneeEmpty()
+        // This should get updated once https://github.com/jboss-set/jira-issue-lottery/issues/30 is resolved
+        SearchQuery searchQuery = SearchQuery.builder().projects("WFLY", "WFCORE", "JBTM").status(IssueStatus.NEW).assigneeEmpty()
                 .build();
         jiraEndpoint.setJql(JqlBuilder.build(searchQuery));
         return new NewIssueCollector(jiraEndpoint);
