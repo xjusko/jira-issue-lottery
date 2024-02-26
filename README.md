@@ -65,9 +65,10 @@ Fork this repository to your GitHub account.
 
 ### Create .env File
 1. Create a `.env` file in the main directory of your app.
-2. Add the value of `jira-issue-lottery.config-file-repo` in the `.env` file to point to a public repository with a valid config file according to first step in [Configuration section](#configure-jira-lottery) such as `https://github.com/jboss-set/jira-issue-lottery`.
+2. Add the value of `%dev.jira-issue-lottery.config-file-repo` in the `.env` file to point to a public repository with a valid config file according to first step in [Configuration section](#configure-jira-lottery) such as `https://github.com/jboss-set/jira-issue-lottery`.
       ```env
-   jira-issue-lottery.config-file-repo=<YOUR REPOSITORY URL>
+   %dev.jira-issue-lottery.config-file-repo=<YOUR REPOSITORY URL>
+> **NOTE** This will override the default value specified in `application.properties` file. If you override the value for all modes (dev, test, prod, when you don't prepend a mode, such as `%dev`), then one of the tests will fail, as it expects the original value.
 3. Create a Jira Personal Access Token ([Guide on how to create the token](https://confluence.atlassian.com/enterprise/using-personal-access-tokens-1026032365.html))
 4. Add the following variable to the `.env` file:
    ```env
