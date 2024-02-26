@@ -36,7 +36,7 @@ public class IssueWrapper extends Issue {
 
     public IssueWrapper(String summary, Long id, String project, IssueStatus status, Collection<String> components)
             throws URISyntaxException {
-        this(summary, new URI(URI_ID_TEMPLATE.formatted(id)), null, id,
+        this(summary, new URI(URI_ID_TEMPLATE.formatted(id)), project + "-" + id, id,
                 new BasicProject(new URI(URI_ID_TEMPLATE.formatted(id)), project, id, project), null,
                 new Status(null, id, status.toString(), null, null, new StatusCategory(null, null, null, null, null)), null,
                 null, null, null, null, null, null, null, null,

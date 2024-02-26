@@ -1,138 +1,39 @@
 package org.jboss.set.draw;
 
-import com.atlassian.httpclient.api.HttpClient;
-import com.atlassian.jira.rest.client.api.AuthenticationHandler;
-import com.atlassian.jira.rest.client.api.JiraRestClient;
-import com.atlassian.jira.rest.client.api.JiraRestClientFactory;
-import com.atlassian.jira.rest.client.api.SearchRestClient;
-import com.atlassian.jira.rest.client.api.domain.Issue;
-import com.atlassian.jira.rest.client.api.domain.SearchResult;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.atlassian.util.concurrent.Promise;
-import io.atlassian.util.concurrent.Promises;
 import io.quarkus.mailer.Mail;
-import io.quarkus.mailer.MockMailbox;
-import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
-import jakarta.inject.Inject;
-import org.apache.camel.CamelContext;
-import org.apache.camel.component.jira.JiraEndpoint;
-import org.apache.camel.quarkus.test.CamelQuarkusTestSupport;
-import org.apache.camel.spi.Registry;
-import org.jboss.JiraEndpointProducer;
-import org.jboss.JiraIssueLotteryCommand;
 import org.jboss.config.LotteryConfig;
-import org.jboss.config.LotteryConfigProducer;
 import org.jboss.draw.Lottery;
 import org.jboss.query.IssueStatus;
 import org.jboss.set.wrappers.IssueWrapper;
-import org.jboss.testing.JiraCommand;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import picocli.CommandLine;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URISyntaxException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static org.apache.camel.component.jira.JiraConstants.JIRA_REST_CLIENT_FACTORY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @QuarkusTest
-public class LotteryDrawingTest extends CamelQuarkusTestSupport {
+public class LotteryDrawingTest extends AbstractLotteryTest {
 
-    @Inject
-    @JiraCommand
-    JiraIssueLotteryCommand app;
-
-    @Inject
-    MockMailbox mailbox;
-
-    @InjectMock
-    private JiraEndpointProducer jiraEndpointProducer;
-
-    @Inject
-    ObjectMapper objectMapper;
-
-    @InjectMock
-    LotteryConfigProducer lotteryConfigProducer;
-
-    private final JiraRestClient jiraRestClient = Mockito.mock(JiraRestClient.class);
-    private final JiraRestClientFactory jiraRestClientFactory = Mockito.mock(JiraRestClientFactory.class);
-    private final SearchRestClient searchRestClient = Mockito.mock(SearchRestClient.class);
-    private final JiraEndpoint jiraEndpoint = Mockito.mock(JiraEndpoint.class);
-
-    @Inject
-    CamelContext camelContext;
-
-    private static List<Issue> issues;
-    private static List<org.jboss.draw.entities.Issue> ourIssues;
-
-    @BeforeAll
-    static void init() {
+    @Override
+    protected List<com.atlassian.jira.rest.client.api.domain.Issue> setupIssues() {
         try {
-            issues = List.of(
+            return List.of(
                     new IssueWrapper("Issue", 1L, "WFLY", IssueStatus.NEW, Set.of("Documentation")),
                     new IssueWrapper("Issue", 2L, "RESTEASY", IssueStatus.NEW, Set.of("Logging")),
                     new IssueWrapper("Issue", 3L, "WELD", IssueStatus.NEW, Set.of("Logging")),
                     new IssueWrapper("Issue", 4L, "WELD", IssueStatus.NEW, Set.of("Logging")));
-            ourIssues = issues.stream().map(org.jboss.draw.entities.Issue::new).toList();
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @BeforeEach
-    protected void doBeforeEach() {
-        Mockito.reset(lotteryConfigProducer);
-        mailbox.clear();
-    }
-
-    @Override
-    protected void bindToRegistry(Registry registry) {
-        registry.bind(JIRA_REST_CLIENT_FACTORY, jiraRestClientFactory);
-    }
-
-    public void setMocks() {
-        when(jiraRestClientFactory.create(any(), (AuthenticationHandler) any())).thenReturn(jiraRestClient);
-        when(jiraRestClientFactory.create(any(), (HttpClient) any())).thenReturn(jiraRestClient);
-
-        when(jiraEndpointProducer.getEndpoint(any(), any(), any())).thenReturn(jiraEndpoint);
-
-        when(jiraEndpoint.getClient()).thenReturn(jiraRestClient);
-        when(jiraEndpoint.getCamelContext()).thenReturn(camelContext);
-        when(jiraRestClient.getSearchClient()).thenReturn(searchRestClient);
-
-        when(searchRestClient.searchJql(any(), any(), any(), any())).then(new Answer<Promise<SearchResult>>() {
-
-            boolean visited = false;
-
-            @Override
-            public Promise<SearchResult> answer(InvocationOnMock invocationOnMock) throws Throwable {
-                if (!visited) {
-                    visited = true;
-                    return Promises.promise(new SearchResult(0, 50, issues.size(), issues));
-                }
-                return Promises.promise(new SearchResult(0, 50, 0, Collections.emptyList()));
-            }
-        });
-    }
-
-    @Override
-    protected CamelContext createCamelContext() throws Exception {
-        setMocks();
-        return camelContext;
     }
 
     @Test
@@ -142,7 +43,7 @@ public class LotteryDrawingTest extends CamelQuarkusTestSupport {
                 delay: P14D
                 participants:
                   - email: The-Huginn@thehuginn.com
-                    days: [MONDAY]
+                    maxIssues: 5
                     projects:
                       - project: WFLY
                         components: [Logging, Documentation]
@@ -171,7 +72,7 @@ public class LotteryDrawingTest extends CamelQuarkusTestSupport {
                 delay: P14D
                 participants:
                   - email: The-Huginn@thehuginn.com
-                    days: [MONDAY]
+                    maxIssues: 5
                     projects:
                       - project: WFLY
                         maxIssues: 5""";
@@ -199,7 +100,7 @@ public class LotteryDrawingTest extends CamelQuarkusTestSupport {
                 delay: P14D
                 participants:
                   - email: The-Huginn@thehuginn.com
-                    days: [MONDAY]
+                    maxIssues: 10
                     projects:
                       - project: WFLY
                         components: [Documentation]
@@ -231,7 +132,7 @@ public class LotteryDrawingTest extends CamelQuarkusTestSupport {
                 delay: P14D
                 participants:
                   - email: The-Huginn@thehuginn.com
-                    days: [MONDAY]
+                    maxIssues: 5
                     projects:
                       - project: WFLY
                         components: [Documentation]
@@ -261,7 +162,7 @@ public class LotteryDrawingTest extends CamelQuarkusTestSupport {
                 delay: P14D
                 participants:
                   - email: The-Huginn@thehuginn.com
-                    days: [MONDAY]
+                    maxIssues: 5
                     projects:
                       - project: WFLY
                         components: [Documentation]
@@ -290,7 +191,7 @@ public class LotteryDrawingTest extends CamelQuarkusTestSupport {
                 delay: P14D
                 participants:
                   - email: The-Huginn@thehuginn.com
-                    days: [MONDAY]
+                    maxIssues: 10
                     projects:
                       - project: WFLY
                         components: [Logging]
@@ -319,13 +220,13 @@ public class LotteryDrawingTest extends CamelQuarkusTestSupport {
                 delay: P14D
                 participants:
                   - email: The-Huginn@thehuginn.com
-                    days: [MONDAY]
+                    maxIssues: 5
                     projects:
                       - project: WFLY
                         components: [Documentation]
                         maxIssues: 5
                   - email: xstefank@redhat.com
-                    days: [MONDAY]
+                    maxIssues: 5
                     projects:
                       - project: RESTEASY
                         components: [Logging]
@@ -359,7 +260,7 @@ public class LotteryDrawingTest extends CamelQuarkusTestSupport {
                 delay: P14D
                 participants:
                   - email: The-Huginn@thehuginn.com
-                    days: [MONDAY]
+                    maxIssues: 5
                     projects:
                       - project: WELD
                         components: [Logging]

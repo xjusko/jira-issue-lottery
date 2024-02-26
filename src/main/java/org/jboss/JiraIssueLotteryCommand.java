@@ -1,7 +1,7 @@
 package org.jboss;
 
 import jakarta.annotation.PostConstruct;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.jira.JiraComponent;
@@ -14,7 +14,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Parameters;
 
 @Command(name = "jira-issue-lottery", mixinStandardHelpOptions = true)
-@ApplicationScoped
+@RequestScoped
 @JiraCommand
 public class JiraIssueLotteryCommand implements Runnable {
 

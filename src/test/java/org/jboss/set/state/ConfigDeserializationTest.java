@@ -23,6 +23,7 @@ public class ConfigDeserializationTest {
                 delay: P14D
                 participants:
                   - email: The-Huginn@thehuginn.com
+                    maxIssues: 5
                     projects:
                       - project: WFLY
                         components: [Logging]
