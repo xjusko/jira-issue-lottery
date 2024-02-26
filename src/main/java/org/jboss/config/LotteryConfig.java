@@ -24,6 +24,7 @@ public record LotteryConfig(
 
     public record Participant(
             @JsonProperty(required = true) String email,
+            @JsonProperty(required = true) int maxIssues,
             Set<Project> projects) {
 
         public record Project(

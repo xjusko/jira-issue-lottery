@@ -28,6 +28,7 @@ public class NewIssueCollector extends NewIssuesConsumer implements Executable {
                 state.issueStates.add(new SingleIssueState(issue));
             }
         });
+        state.issueStates.clear();
         lottery = Arc.container().instance(Lottery.class).get();
     }
 

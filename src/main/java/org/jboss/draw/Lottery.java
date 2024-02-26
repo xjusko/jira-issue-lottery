@@ -56,7 +56,7 @@ public class Lottery {
                             .map(project -> Map.entry(project.project(),
                                     Tuple2.of(project.participation().maxIssues(), project.components())))
                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-                    return new Participant(participant.email(), collectedProjects);
+                    return new Participant(participant.email(), participant.maxIssues(), collectedProjects);
                 })
                 .collect(Collectors.toList());
         // retrieves issues from LotteryConfig
@@ -70,7 +70,7 @@ public class Lottery {
             // break this loop if the same participant is encountered again
             for (int i = (lastParticipant + 1) % participants.size(); true; i = (i + 1) % participants.size()) {
                 Participant participant = participants.get(i);
-                if (isAssignable(issue, participant)) {
+                if (participant.isAssignable(issue)) {
                     participant.assignIssue(issue);
                     lastParticipant = i;
                     break;
@@ -87,13 +87,6 @@ public class Lottery {
                 .setSubject(EMAIL_SUBJECT)
                 .setText(createEmailText(participant.getEmail(), assignedIssues))
                 .setTo(List.of(participant.getEmail()))));
-    }
-
-    private boolean isAssignable(Issue issue, Participant participant) {
-        Tuple2<Integer, Set<String>> issuesComponentsKey = participant.getProjectComponents(issue.getProject());
-        boolean betweenComponents = issuesComponentsKey.getItem2() == null ||
-                issuesComponentsKey.getItem2().containsAll(issue.getComponents());
-        return issuesComponentsKey.getItem1() != 0 && betweenComponents;
     }
 
     public static String createEmailText(String email, List<Issue> issues) {
