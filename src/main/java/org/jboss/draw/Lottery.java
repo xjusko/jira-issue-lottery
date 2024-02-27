@@ -21,6 +21,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.joining;
 import static org.jboss.config.GitHubRawUrl.GitHubRepoToRawUrlConverter.RELATIVE_PATH;
 
 @Unremovable
@@ -34,7 +36,7 @@ public class Lottery {
     private Mailer mailer;
 
     private static final Pattern USERNAME_FROM_EMAIL = Pattern.compile("\\s*(\\b[a-zA-Z0-9._%+-]+)@");
-    public static final String EMAIL_SUBJECT = "This week's lottery issues picked for You";
+    public static final String EMAIL_SUBJECT = "This week's lottery issues picked for %s";
     private static final String EMAIL_BODY = """
             Hi %s,
 
@@ -84,16 +86,25 @@ public class Lottery {
         Map<Participant, List<Issue>> aggregatedByAssignee = issues.stream().filter(issue -> issue.getAssignee() != null)
                 .collect(Collectors.groupingBy(Issue::getAssignee));
         aggregatedByAssignee.forEach((participant, assignedIssues) -> mailer.send(new Mail()
-                .setSubject(EMAIL_SUBJECT)
+                .setSubject(EMAIL_SUBJECT.formatted(getUsername(participant.getEmail())))
                 .setText(createEmailText(participant.getEmail(), assignedIssues))
                 .setTo(List.of(participant.getEmail()))));
     }
 
-    public static String createEmailText(String email, List<Issue> issues) {
+    public static String getUsername(String email) {
         Matcher matcher = USERNAME_FROM_EMAIL.matcher(email);
-        String username = matcher.find() ? matcher.group(1) : "Somebody";
-        return EMAIL_BODY.formatted(username,
-                issues.stream().map(issue -> issue.getBrowseUri().toString()).collect(Collectors.joining("\n")),
+        return matcher.find() ? matcher.group(1) : "Somebody";
+    }
+
+    public static String createEmailText(String email, List<Issue> issues) {
+        return EMAIL_BODY.formatted(getUsername(email),
+                // group by Project name
+                issues.stream().collect(groupingBy(Issue::getProject)).entrySet().stream()
+                        // write project and then collect all links with bullet point prepended
+                        .map(projectLinksEntry -> projectLinksEntry.getKey() + "\n" +
+                                projectLinksEntry.getValue().stream().map(issue -> "\t-" + issue.getBrowseUri().toString())
+                                        .collect(Collectors.joining("\n\n")))
+                        .collect(joining("\n")),
                 configFileUrl());
     }
 

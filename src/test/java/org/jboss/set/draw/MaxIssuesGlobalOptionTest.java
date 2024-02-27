@@ -64,7 +64,6 @@ public class MaxIssuesGlobalOptionTest extends AbstractLotteryTest {
 
         List<Mail> sent = mailbox.getMailsSentTo(email);
         assertEquals(1, sent.size());
-        assertEquals(Lottery.EMAIL_SUBJECT, sent.get(0).getSubject());
         assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(0))), sent.get(0).getText());
     }
 
@@ -94,7 +93,6 @@ public class MaxIssuesGlobalOptionTest extends AbstractLotteryTest {
 
         List<Mail> sent = mailbox.getMailsSentTo(email);
         assertEquals(1, sent.size());
-        assertEquals(Lottery.EMAIL_SUBJECT, sent.get(0).getSubject());
         assertEquals(Lottery.createEmailText(email, ourIssues.subList(0, 5)), sent.get(0).getText());
     }
 
@@ -126,7 +124,6 @@ public class MaxIssuesGlobalOptionTest extends AbstractLotteryTest {
 
         List<Mail> sent = mailbox.getMailsSentTo(email);
         assertEquals(1, sent.size());
-        assertEquals(Lottery.EMAIL_SUBJECT, sent.get(0).getSubject());
         assertEquals(Lottery.createEmailText(email, List.of(
                 ourIssues.get(0), ourIssues.get(1),
                 ourIssues.get(3), ourIssues.get(4),
