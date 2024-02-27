@@ -1,0 +1,27 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    name: Jira-issue-lottery config file validation
+    timeout-minutes: 2
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        name: Download validation binary from main
+        with:
+          ref: main
+          sparse-checkout: |
+            .github/jira-issue-lottery-1.0.0-SNAPSHOT-runner
+          sparse-checkout-cone-mode: false
+
+      - name: Validate config file from Pull Request
+        env:
+          JIRA_ISSUE_LOTTERY_CONFIG_FILE_REPO: https://github.com/${{ github.repository }}
+          JIRA_ISSUE_LOTTERY_ACCESS_TOKEN: NjY2NDE3MzIyNzU0Oo5D9mrMWbW2ewyKVqtKvSuRjWda
+        run: .github/jira-issue-lottery-1.0.0-SNAPSHOT-runner validate ${{ github.event.number }}

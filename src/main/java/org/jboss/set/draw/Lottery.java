@@ -8,11 +8,11 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.ConfigProvider;
 import org.jboss.set.config.GitHubRawUrl;
+import org.jboss.set.config.LotteryConfig;
+import org.jboss.set.config.LotteryConfigProducer;
 import org.jboss.set.draw.entities.Issue;
 import org.jboss.set.draw.entities.Participant;
 import org.jboss.set.processing.state.EveryIssueState;
-import org.jboss.set.config.LotteryConfig;
-import org.jboss.set.config.LotteryConfigProducer;
 
 import java.util.Collections;
 import java.util.List;
