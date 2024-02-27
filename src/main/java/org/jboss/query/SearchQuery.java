@@ -4,6 +4,8 @@
 package org.jboss.query;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -121,6 +123,14 @@ public class SearchQuery {
 
         public Builder projects(String project, String... projects) {
             this.projects = Stream.concat(Stream.of(project), Stream.of(projects)).toList();
+            return this;
+        }
+
+        public Builder projects(Collection<String> projects) {
+            if (projects.isEmpty()) {
+                throw new IllegalArgumentException("At least a single project is expected when building a query");
+            }
+            this.projects = new ArrayList<>(projects);
             return this;
         }
 

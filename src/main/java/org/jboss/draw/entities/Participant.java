@@ -10,10 +10,10 @@ import java.util.Set;
 public class Participant {
 
     private final String email;
-    private int assignableIssues;
+    private Integer assignableIssues;
     private final Map<String, Tuple2<Integer, Set<String>>> projectComponentsMap;
 
-    public Participant(String email, int assignableIssues, Map<String, Tuple2<Integer, Set<String>>> projectComponentsMap) {
+    public Participant(String email, Integer assignableIssues, Map<String, Tuple2<Integer, Set<String>>> projectComponentsMap) {
         this.email = email;
         this.assignableIssues = assignableIssues;
         this.projectComponentsMap = projectComponentsMap;
@@ -39,7 +39,9 @@ public class Participant {
     }
 
     public void assignIssue(Issue issue) {
-        assignableIssues--;
+        if (assignableIssues != null) {
+            assignableIssues--;
+        }
         issue.setAssignee(this);
         Tuple2<Integer, Set<String>> entry = projectComponentsMap.get(issue.getProject());
         projectComponentsMap.put(issue.getProject(), Tuple2.of(entry.getItem1() - 1, entry.getItem2()));
@@ -53,6 +55,7 @@ public class Participant {
         Tuple2<Integer, Set<String>> issuesComponentsKey = getProjectComponents(issue.getProject());
         boolean betweenComponents = issuesComponentsKey.getItem2() == null ||
                 issuesComponentsKey.getItem2().containsAll(issue.getComponents());
-        return issuesComponentsKey.getItem1() != 0 && betweenComponents && assignableIssues > 0;
+        boolean canAssignIssue = assignableIssues == null || assignableIssues > 0;
+        return issuesComponentsKey.getItem1() != 0 && betweenComponents && canAssignIssue;
     }
 }

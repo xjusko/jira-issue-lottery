@@ -28,6 +28,7 @@ import org.apache.camel.spi.Registry;
 import org.jboss.JiraEndpointProducer;
 import org.jboss.JiraIssueLotteryCommand;
 import org.jboss.config.LotteryConfigProducer;
+import org.jboss.set.helper.MockedSearchRestClientProducer;
 import org.jboss.testing.JiraCommand;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
@@ -59,9 +60,11 @@ public abstract class AbstractLotteryTest extends CamelQuarkusTestSupport {
     @InjectMock
     LotteryConfigProducer lotteryConfigProducer;
 
+    @Inject
+    MockedSearchRestClientProducer mockedSearchRestClientProducer;
+
     private final JiraRestClient jiraRestClient = Mockito.mock(JiraRestClient.class);
     private final JiraRestClientFactory jiraRestClientFactory = Mockito.mock(JiraRestClientFactory.class);
-    private final SearchRestClient searchRestClient = Mockito.mock(SearchRestClient.class);
     private final JiraEndpoint jiraEndpoint = Mockito.mock(JiraEndpoint.class);
 
     @Inject
@@ -84,6 +87,8 @@ public abstract class AbstractLotteryTest extends CamelQuarkusTestSupport {
     }
 
     public void setMocks() {
+        SearchRestClient searchRestClient = mockedSearchRestClientProducer.getSearchRestClient();
+
         when(jiraRestClientFactory.create(any(), (AuthenticationHandler) any())).thenReturn(jiraRestClient);
         when(jiraRestClientFactory.create(any(), (HttpClient) any())).thenReturn(jiraRestClient);
 
