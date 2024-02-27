@@ -61,7 +61,7 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
 
         List<Mail> sent = mailbox.getMailsSentTo(email);
         assertEquals(1, sent.size());
-        assertEquals(Lottery.EMAIL_SUBJECT, sent.get(0).getSubject());
+        assertEquals(Lottery.EMAIL_SUBJECT.formatted("The-Huginn"), sent.get(0).getSubject());
         assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(0))), sent.get(0).getText());
     }
 
@@ -89,7 +89,6 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
 
         List<Mail> sent = mailbox.getMailsSentTo(email);
         assertEquals(1, sent.size());
-        assertEquals(Lottery.EMAIL_SUBJECT, sent.get(0).getSubject());
         assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(0))), sent.get(0).getText());
     }
 
@@ -121,7 +120,6 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
 
         List<Mail> sent = mailbox.getMailsSentTo(email);
         assertEquals(1, sent.size());
-        assertEquals(Lottery.EMAIL_SUBJECT, sent.get(0).getSubject());
         assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(0), ourIssues.get(1))), sent.get(0).getText());
     }
 
@@ -182,6 +180,7 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
         assertEquals(1, sent.size());
         // Check for correct parsing of username from email
         assertTrue(sent.get(0).getText().contains("Hi The-Huginn,"));
+        assertTrue(sent.get(0).getSubject().contains("The-Huginn"));
     }
 
     @Test
@@ -247,7 +246,7 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
                 Map.entry("xstefank@redhat.com", ourIssues.get(1)))) {
             List<Mail> sent = mailbox.getMailsSentTo(userIssue.getKey());
             assertEquals(1, sent.size());
-            assertEquals(Lottery.EMAIL_SUBJECT, sent.get(0).getSubject());
+            assertEquals(Lottery.EMAIL_SUBJECT.formatted(Lottery.getUsername(userIssue.getKey())), sent.get(0).getSubject());
             assertEquals(Lottery.createEmailText(userIssue.getKey(), List.of(userIssue.getValue())),
                     sent.get(0).getText());
         }
@@ -278,7 +277,6 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
 
         List<Mail> sent = mailbox.getMailsSentTo(email);
         assertEquals(1, sent.size());
-        assertEquals(Lottery.EMAIL_SUBJECT, sent.get(0).getSubject());
         assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(2))), sent.get(0).getText());
     }
 }
