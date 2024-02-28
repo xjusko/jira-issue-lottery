@@ -15,7 +15,7 @@ Fork this repository to your GitHub account.
       ```yaml
       delay: P14D
       participants:
-        - email: The-Huginn@thehuginn.com
+        - email: Tadpole@thehuginn.com
           projects:
             - project: WFLY
               components: [Logging]

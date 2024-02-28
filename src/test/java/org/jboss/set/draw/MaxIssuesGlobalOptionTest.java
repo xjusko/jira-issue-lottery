@@ -3,9 +3,10 @@ package org.jboss.set.draw;
 import com.atlassian.jira.rest.client.api.domain.Issue;
 import io.quarkus.mailer.Mail;
 import io.quarkus.test.junit.QuarkusTest;
-import org.jboss.set.config.LotteryConfig;
 import org.jboss.set.query.IssueStatus;
 import org.jboss.set.wrappers.IssueWrapper;
+import org.jboss.set.config.LotteryConfig;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import picocli.CommandLine;
 
@@ -41,15 +42,15 @@ public class MaxIssuesGlobalOptionTest extends AbstractLotteryTest {
 
     @Test
     public void testAssigningOneIssue() throws Exception {
-        String email = "The-Huginn@thehuginn.com";
+        String email = "Tadpole@thehuginn.com";
         String configFile = """
                 delay: P14D
                 participants:
-                  - email: The-Huginn@thehuginn.com
+                  - email: %s
                     maxIssues: 1
                     projects:
                       - project: WFLY
-                        maxIssues: 2""";
+                        maxIssues: 2""".formatted(email);
 
         LotteryConfig testLotteryConfig = objectMapper.readValue(configFile, LotteryConfig.class);
         when(lotteryConfigProducer.getLotteryConfig()).thenReturn(testLotteryConfig);
@@ -63,22 +64,22 @@ public class MaxIssuesGlobalOptionTest extends AbstractLotteryTest {
 
         List<Mail> sent = mailbox.getMailsSentTo(email);
         assertEquals(1, sent.size());
-        assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(0))), sent.get(0).getText());
+        Assertions.assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(0))), sent.get(0).getHtml());
     }
 
     @Test
     public void testRespectingGlobalMaxIssuesWithTwoProjects() throws Exception {
-        String email = "The-Huginn@thehuginn.com";
+        String email = "Tadpole@thehuginn.com";
         String configFile = """
                 delay: P14D
                 participants:
-                  - email: The-Huginn@thehuginn.com
+                  - email: %s
                     maxIssues: 5
                     projects:
                       - project: WFLY
                         maxIssues: 5
                       - project: RESTEASY
-                        maxIssues: 5""";
+                        maxIssues: 5""".formatted(email);
 
         LotteryConfig testLotteryConfig = objectMapper.readValue(configFile, LotteryConfig.class);
         when(lotteryConfigProducer.getLotteryConfig()).thenReturn(testLotteryConfig);
@@ -92,16 +93,16 @@ public class MaxIssuesGlobalOptionTest extends AbstractLotteryTest {
 
         List<Mail> sent = mailbox.getMailsSentTo(email);
         assertEquals(1, sent.size());
-        assertEquals(Lottery.createEmailText(email, ourIssues.subList(0, 5)), sent.get(0).getText());
+        assertEquals(Lottery.createEmailText(email, ourIssues.subList(0, 5)), sent.get(0).getHtml());
     }
 
     @Test
     public void testRespectingGlobalMaxIssuesWithThreeProjects() throws Exception {
-        String email = "The-Huginn@thehuginn.com";
+        String email = "Tadpole@thehuginn.com";
         String configFile = """
                 delay: P14D
                 participants:
-                  - email: The-Huginn@thehuginn.com
+                  - email: %s
                     maxIssues: 5
                     projects:
                       - project: WFLY
@@ -109,7 +110,7 @@ public class MaxIssuesGlobalOptionTest extends AbstractLotteryTest {
                       - project: RESTEASY
                         maxIssues: 2
                       - project: WELD
-                        maxIssues: 2""";
+                        maxIssues: 2""".formatted(email);
 
         LotteryConfig testLotteryConfig = objectMapper.readValue(configFile, LotteryConfig.class);
         when(lotteryConfigProducer.getLotteryConfig()).thenReturn(testLotteryConfig);
@@ -126,6 +127,6 @@ public class MaxIssuesGlobalOptionTest extends AbstractLotteryTest {
         assertEquals(Lottery.createEmailText(email, List.of(
                 ourIssues.get(0), ourIssues.get(1),
                 ourIssues.get(3), ourIssues.get(4),
-                ourIssues.get(6))), sent.get(0).getText());
+                ourIssues.get(6))), sent.get(0).getHtml());
     }
 }

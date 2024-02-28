@@ -22,7 +22,7 @@ public class ConfigDeserializationTest {
         String configFile = """
                 delay: P14D
                 participants:
-                  - email: The-Huginn@thehuginn.com
+                  - email: Tadpole@thehuginn.com
                     maxIssues: 5
                     projects:
                       - project: WFLY

@@ -4,7 +4,7 @@
  *  tests.
  *  Furthermore, then you can access List of {@code org.jboss.draw.entities.Issue}, with
  *  the same issues, in variable {@code ourIssues}. This is useful for methods such as
- *  {@link org.jboss.draw.Lottery#createEmailText(java.lang.String, java.util.List)}.
+ *  {@link org.jboss.set.draw.Lottery#createEmailText(java.lang.String, java.util.List)}.
  */
 package org.jboss.set.draw;
 
@@ -26,10 +26,10 @@ import org.apache.camel.component.jira.JiraEndpoint;
 import org.apache.camel.quarkus.test.CamelQuarkusTestSupport;
 import org.apache.camel.spi.Registry;
 import org.jboss.set.JiraEndpointProducer;
+import org.jboss.set.testing.JiraCommand;
 import org.jboss.set.JiraIssueLotteryCommand;
 import org.jboss.set.config.LotteryConfigProducer;
 import org.jboss.set.helper.MockedSearchRestClientProducer;
-import org.jboss.set.testing.JiraCommand;
 import org.junit.jupiter.api.BeforeEach;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
