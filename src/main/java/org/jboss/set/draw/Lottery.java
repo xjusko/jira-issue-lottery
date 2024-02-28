@@ -1,4 +1,4 @@
-package org.jboss.draw;
+package org.jboss.set.draw;
 
 import io.quarkus.arc.Unremovable;
 import io.quarkus.mailer.Mail;
@@ -7,11 +7,11 @@ import io.smallrye.mutiny.tuples.Tuple2;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.ConfigProvider;
-import org.jboss.config.LotteryConfig;
-import org.jboss.config.LotteryConfigProducer;
-import org.jboss.draw.entities.Issue;
-import org.jboss.draw.entities.Participant;
-import org.jboss.processing.state.EveryIssueState;
+import org.jboss.set.config.LotteryConfig;
+import org.jboss.set.config.LotteryConfigProducer;
+import org.jboss.set.draw.entities.Issue;
+import org.jboss.set.draw.entities.Participant;
+import org.jboss.set.processing.state.EveryIssueState;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.joining;
-import static org.jboss.config.GitHubRawUrl.GitHubRepoToRawUrlConverter.RELATIVE_PATH;
+import static org.jboss.set.config.GitHubRawUrl.GitHubRepoToRawUrlConverter.RELATIVE_PATH;
 
 @Unremovable
 @ApplicationScoped

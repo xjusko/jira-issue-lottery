@@ -1,8 +1,8 @@
-package org.jboss.draw.entities;
+package org.jboss.set.draw.entities;
 
 import com.atlassian.jira.rest.client.api.domain.BasicComponent;
 import io.quarkus.logging.Log;
-import org.jboss.processing.state.SingleIssueState;
+import org.jboss.set.processing.state.SingleIssueState;
 
 import java.net.URI;
 import java.net.URISyntaxException;

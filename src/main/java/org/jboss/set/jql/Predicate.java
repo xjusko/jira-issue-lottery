@@ -1,4 +1,4 @@
-package org.jboss.jql;
+package org.jboss.set.jql;
 
 import jakarta.annotation.Nonnull;
 

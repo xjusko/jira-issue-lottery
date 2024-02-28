@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
-import org.jboss.config.GitHubRawUrl;
-import org.jboss.config.LotteryConfig;
+import org.jboss.set.config.GitHubRawUrl;
+import org.jboss.set.config.LotteryConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

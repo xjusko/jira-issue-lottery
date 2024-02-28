@@ -1,4 +1,4 @@
-package org.jboss.config;
+package org.jboss.set.config;
 
 import io.smallrye.config.ConfigMapping;
 import io.smallrye.config.WithDefault;

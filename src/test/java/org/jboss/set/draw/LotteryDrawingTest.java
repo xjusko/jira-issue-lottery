@@ -2,9 +2,9 @@ package org.jboss.set.draw;
 
 import io.quarkus.mailer.Mail;
 import io.quarkus.test.junit.QuarkusTest;
-import org.jboss.config.LotteryConfig;
-import org.jboss.draw.Lottery;
-import org.jboss.query.IssueStatus;
+import org.jboss.set.config.LotteryConfig;
+
+import org.jboss.set.query.IssueStatus;
 import org.jboss.set.wrappers.IssueWrapper;
 import org.junit.jupiter.api.Test;
 import picocli.CommandLine;
@@ -241,7 +241,7 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
         int exitCode = cmd.execute();
         assertEquals(0, exitCode);
 
-        for (Map.Entry<String, org.jboss.draw.entities.Issue> userIssue : List.of(
+        for (Map.Entry<String, org.jboss.set.draw.entities.Issue> userIssue : List.of(
                 Map.entry("The-Huginn@thehuginn.com", ourIssues.get(0)),
                 Map.entry("xstefank@redhat.com", ourIssues.get(1)))) {
             List<Mail> sent = mailbox.getMailsSentTo(userIssue.getKey());

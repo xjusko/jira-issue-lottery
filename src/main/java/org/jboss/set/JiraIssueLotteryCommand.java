@@ -1,4 +1,4 @@
-package org.jboss;
+package org.jboss.set;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -7,10 +7,10 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.component.jira.JiraComponent;
 import org.apache.camel.component.jira.JiraConfiguration;
 import org.apache.camel.component.jira.JiraEndpoint;
-import org.jboss.config.JiraLotteryAppConfig;
-import org.jboss.processing.CollectorProducer;
-import org.jboss.processing.NewIssueCollector;
-import org.jboss.testing.JiraCommand;
+import org.jboss.set.config.JiraLotteryAppConfig;
+import org.jboss.set.processing.CollectorProducer;
+import org.jboss.set.processing.NewIssueCollector;
+import org.jboss.set.testing.JiraCommand;
 import picocli.CommandLine.Command;
 
 @Command(name = "jira-issue-lottery", mixinStandardHelpOptions = true)

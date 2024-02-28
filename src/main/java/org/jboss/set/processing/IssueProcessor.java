@@ -1,4 +1,4 @@
-package org.jboss.processing;
+package org.jboss.set.processing;
 
 import com.atlassian.jira.rest.client.api.domain.Comment;
 import io.quarkus.logging.Log;

@@ -1,13 +1,13 @@
-package org.jboss.processing;
+package org.jboss.set.processing;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.apache.camel.component.jira.JiraEndpoint;
-import org.jboss.config.LotteryConfig;
-import org.jboss.config.LotteryConfigProducer;
-import org.jboss.jql.JqlBuilder;
-import org.jboss.query.IssueStatus;
-import org.jboss.query.SearchQuery;
+import org.jboss.set.config.LotteryConfig;
+import org.jboss.set.config.LotteryConfigProducer;
+import org.jboss.set.jql.JqlBuilder;
+import org.jboss.set.query.IssueStatus;
+import org.jboss.set.query.SearchQuery;
 
 import java.time.LocalDate;
 import java.util.Collection;

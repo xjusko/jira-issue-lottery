@@ -1,4 +1,4 @@
-package org.jboss.draw.entities;
+package org.jboss.set.draw.entities;
 
 import io.smallrye.mutiny.tuples.Tuple2;
 

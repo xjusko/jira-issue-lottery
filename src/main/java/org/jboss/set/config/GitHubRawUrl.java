@@ -1,4 +1,4 @@
-package org.jboss.config;
+package org.jboss.set.config;
 
 import org.eclipse.microprofile.config.spi.Converter;
 

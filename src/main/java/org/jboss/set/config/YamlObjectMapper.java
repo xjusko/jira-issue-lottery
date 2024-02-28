@@ -1,4 +1,4 @@
-package org.jboss.config;
+package org.jboss.set.config;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

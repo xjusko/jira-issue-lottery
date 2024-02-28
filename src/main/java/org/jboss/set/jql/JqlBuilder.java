@@ -1,6 +1,6 @@
-package org.jboss.jql;
+package org.jboss.set.jql;
 
-import org.jboss.query.SearchQuery;
+import org.jboss.set.query.SearchQuery;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;

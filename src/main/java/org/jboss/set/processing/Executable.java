@@ -1,4 +1,4 @@
-package org.jboss.processing;
+package org.jboss.set.processing;
 
 /**
  * Even if it is basically the same as {@code java.lang.Runnable} interface,
