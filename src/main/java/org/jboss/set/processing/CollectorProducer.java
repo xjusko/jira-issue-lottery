@@ -22,11 +22,7 @@ public class CollectorProducer {
 
     public NewIssueCollector newIssueCollectorInstance(JiraEndpoint jiraEndpoint) {
         LotteryConfig lotteryConfig = lotteryConfigProducer.getLotteryConfig();
-        Set<String> availableProjects = lotteryConfig.participants().stream()
-                .map(LotteryConfig.Participant::projects)
-                .map(projects -> projects.stream().map(LotteryConfig.Participant.Project::project).collect(Collectors.toSet()))
-                .flatMap(Collection::stream)
-                .collect(Collectors.toSet());
+        Set<String> availableProjects = getAvailableProjects(lotteryConfig);
         SearchQuery searchQuery = SearchQuery.builder().projects(availableProjects).status(IssueStatus.NEW)
                 .assigneeEmpty()
                 .build();
@@ -36,10 +32,19 @@ public class CollectorProducer {
 
     public StaleIssueCollector newStaleIssueCollector(JiraEndpoint jiraEndpoint) {
         LotteryConfig lotteryConfig = lotteryConfigProducer.getLotteryConfig();
-        SearchQuery searchQuery = SearchQuery.builder().projects("WFLY")
+        Set<String> availableProjects = getAvailableProjects(lotteryConfig);
+        SearchQuery searchQuery = SearchQuery.builder().projects(availableProjects)
                 .before(LocalDate.now().minusDays(lotteryConfig.delay().toDays())).assigneeNotEmpty()
                 .status(IssueStatus.CREATED, IssueStatus.ASSIGNED, IssueStatus.POST).build();
         jiraEndpoint.setJql(JqlBuilder.build(searchQuery));
         return new StaleIssueCollector(jiraEndpoint);
+    }
+
+    private Set<String> getAvailableProjects(LotteryConfig lotteryConfig) {
+        return lotteryConfig.participants().stream()
+                .map(LotteryConfig.Participant::projects)
+                .map(projects -> projects.stream().map(LotteryConfig.Participant.Project::project).collect(Collectors.toSet()))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toSet());
     }
 }
