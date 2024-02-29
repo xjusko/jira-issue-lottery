@@ -30,7 +30,7 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
                     new IssueWrapper("Issue", 1L, "WFLY", IssueStatus.NEW, Set.of("Documentation")),
                     new IssueWrapper("Issue", 2L, "RESTEASY", IssueStatus.NEW, Set.of("Logging")),
                     new IssueWrapper("Issue", 3L, "WELD", IssueStatus.NEW, Set.of("Logging")),
-                    new IssueWrapper("Issue", 4L, "WELD", IssueStatus.NEW, Set.of("Logging")));
+                    new IssueWrapper("Issue", 4L, "WELD", IssueStatus.NEW, Set.of("Logging", "Documentation")));
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
@@ -278,5 +278,89 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
         List<Mail> sent = mailbox.getMailsSentTo(email);
         assertEquals(1, sent.size());
         assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(2))), sent.get(0).getText());
+    }
+
+    @Test
+    public void testAssigningPartialComponentsHitFromConfig() throws Exception {
+        String email = "Tadpole@thehuginn.com";
+        String configFile = """
+                delay: P14D
+                participants:
+                  - email: %s
+                    maxIssues: 5
+                    projects:
+                      - project: WELD
+                        components: [Logging]
+                        maxIssues: 2""".formatted(email);
+
+        LotteryConfig testLotteryConfig = objectMapper.readValue(configFile, LotteryConfig.class);
+        when(lotteryConfigProducer.getLotteryConfig()).thenReturn(testLotteryConfig);
+
+        StringWriter sw = new StringWriter();
+        CommandLine cmd = new CommandLine(app);
+        cmd.setOut(new PrintWriter(sw));
+
+        int exitCode = cmd.execute();
+        assertEquals(0, exitCode);
+
+        List<Mail> sent = mailbox.getMailsSentTo(email);
+        assertEquals(1, sent.size());
+        assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(2), ourIssues.get(3))), sent.get(0).getText());
+    }
+
+    @Test
+    public void testAssigningPartialComponentsHitFromIssue() throws Exception {
+        String email = "Tadpole@thehuginn.com";
+        String configFile = """
+                delay: P14D
+                participants:
+                  - email: %s
+                    maxIssues: 5
+                    projects:
+                      - project: WELD
+                        components: [Logging, Documentation]
+                        maxIssues: 2""".formatted(email);
+
+        LotteryConfig testLotteryConfig = objectMapper.readValue(configFile, LotteryConfig.class);
+        when(lotteryConfigProducer.getLotteryConfig()).thenReturn(testLotteryConfig);
+
+        StringWriter sw = new StringWriter();
+        CommandLine cmd = new CommandLine(app);
+        cmd.setOut(new PrintWriter(sw));
+
+        int exitCode = cmd.execute();
+        assertEquals(0, exitCode);
+
+        List<Mail> sent = mailbox.getMailsSentTo(email);
+        assertEquals(1, sent.size());
+        assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(2), ourIssues.get(3))), sent.get(0).getText());
+    }
+
+    @Test
+    public void testAssigningWithNoPartialComponentsHit() throws Exception {
+        String email = "Tadpole@thehuginn.com";
+        String configFile = """
+                delay: P14D
+                participants:
+                  - email: %s
+                    maxIssues: 5
+                    projects:
+                      - project: WELD
+                        components: [Documentation]
+                        maxIssues: 2""".formatted(email);
+
+        LotteryConfig testLotteryConfig = objectMapper.readValue(configFile, LotteryConfig.class);
+        when(lotteryConfigProducer.getLotteryConfig()).thenReturn(testLotteryConfig);
+
+        StringWriter sw = new StringWriter();
+        CommandLine cmd = new CommandLine(app);
+        cmd.setOut(new PrintWriter(sw));
+
+        int exitCode = cmd.execute();
+        assertEquals(0, exitCode);
+
+        List<Mail> sent = mailbox.getMailsSentTo(email);
+        assertEquals(1, sent.size());
+        assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(3))), sent.get(0).getText());
     }
 }

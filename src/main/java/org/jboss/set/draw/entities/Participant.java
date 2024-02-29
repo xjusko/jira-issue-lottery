@@ -3,6 +3,7 @@ package org.jboss.set.draw.entities;
 import io.smallrye.mutiny.tuples.Tuple2;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -53,8 +54,9 @@ public class Participant {
 
     public boolean isAssignable(Issue issue) {
         Tuple2<Integer, Set<String>> issuesComponentsKey = getProjectComponents(issue.getProject());
+        List<String> components = issue.getComponents();
         boolean betweenComponents = issuesComponentsKey.getItem2() == null ||
-                issuesComponentsKey.getItem2().containsAll(issue.getComponents());
+                !issuesComponentsKey.getItem2().stream().filter(components::contains).toList().isEmpty();
         boolean canAssignIssue = assignableIssues == null || assignableIssues > 0;
         return issuesComponentsKey.getItem1() != 0 && betweenComponents && canAssignIssue;
     }
