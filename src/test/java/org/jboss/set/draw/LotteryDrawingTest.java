@@ -2,10 +2,11 @@ package org.jboss.set.draw;
 
 import io.quarkus.mailer.Mail;
 import io.quarkus.test.junit.QuarkusTest;
-import org.jboss.set.config.LotteryConfig;
-
+import org.jboss.set.draw.entities.Issue;
 import org.jboss.set.query.IssueStatus;
 import org.jboss.set.wrappers.IssueWrapper;
+import org.jboss.set.config.LotteryConfig;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import picocli.CommandLine;
 
@@ -38,16 +39,16 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
 
     @Test
     public void testAssigningOneIssue() throws Exception {
-        String email = "The-Huginn@thehuginn.com";
+        String email = "Tadpole@thehuginn.com";
         String configFile = """
                 delay: P14D
                 participants:
-                  - email: The-Huginn@thehuginn.com
+                  - email: %s
                     maxIssues: 5
                     projects:
                       - project: WFLY
                         components: [Logging, Documentation]
-                        maxIssues: 5""";
+                        maxIssues: 5""".formatted(email);
 
         LotteryConfig testLotteryConfig = objectMapper.readValue(configFile, LotteryConfig.class);
         when(lotteryConfigProducer.getLotteryConfig()).thenReturn(testLotteryConfig);
@@ -61,21 +62,21 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
 
         List<Mail> sent = mailbox.getMailsSentTo(email);
         assertEquals(1, sent.size());
-        assertEquals(Lottery.EMAIL_SUBJECT.formatted("The-Huginn"), sent.get(0).getSubject());
-        assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(0))), sent.get(0).getText());
+        Assertions.assertEquals(Lottery.EMAIL_SUBJECT.formatted("Tadpole"), sent.get(0).getSubject());
+        assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(0))), sent.get(0).getHtml());
     }
 
     @Test
     public void testAssigningOneIssueOnlyProjectDefined() throws Exception {
-        String email = "The-Huginn@thehuginn.com";
+        String email = "Tadpole@thehuginn.com";
         String configFile = """
                 delay: P14D
                 participants:
-                  - email: The-Huginn@thehuginn.com
+                  - email: %s
                     maxIssues: 5
                     projects:
                       - project: WFLY
-                        maxIssues: 5""";
+                        maxIssues: 5""".formatted(email);
 
         LotteryConfig testLotteryConfig = objectMapper.readValue(configFile, LotteryConfig.class);
         when(lotteryConfigProducer.getLotteryConfig()).thenReturn(testLotteryConfig);
@@ -89,16 +90,16 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
 
         List<Mail> sent = mailbox.getMailsSentTo(email);
         assertEquals(1, sent.size());
-        assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(0))), sent.get(0).getText());
+        assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(0))), sent.get(0).getHtml());
     }
 
     @Test
     public void testAssigningAllIssues() throws Exception {
-        String email = "The-Huginn@thehuginn.com";
+        String email = "Tadpole@thehuginn.com";
         String configFile = """
                 delay: P14D
                 participants:
-                  - email: The-Huginn@thehuginn.com
+                  - email: %s
                     maxIssues: 10
                     projects:
                       - project: WFLY
@@ -106,7 +107,7 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
                         maxIssues: 5
                       - project: RESTEASY
                         components: [Logging]
-                        maxIssues: 5""";
+                        maxIssues: 5""".formatted(email);
 
         LotteryConfig testLotteryConfig = objectMapper.readValue(configFile, LotteryConfig.class);
         when(lotteryConfigProducer.getLotteryConfig()).thenReturn(testLotteryConfig);
@@ -120,21 +121,21 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
 
         List<Mail> sent = mailbox.getMailsSentTo(email);
         assertEquals(1, sent.size());
-        assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(0), ourIssues.get(1))), sent.get(0).getText());
+        assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(0), ourIssues.get(1))), sent.get(0).getHtml());
     }
 
     @Test
     public void testAppendingRepositoryForUnsubcription() throws Exception {
-        String email = "The-Huginn@thehuginn.com";
+        String email = "Tadpole@thehuginn.com";
         String configFile = """
                 delay: P14D
                 participants:
-                  - email: The-Huginn@thehuginn.com
+                  - email: %s
                     maxIssues: 5
                     projects:
                       - project: WFLY
                         components: [Documentation]
-                        maxIssues: 5""";
+                        maxIssues: 5""".formatted(email);
 
         LotteryConfig testLotteryConfig = objectMapper.readValue(configFile, LotteryConfig.class);
         when(lotteryConfigProducer.getLotteryConfig()).thenReturn(testLotteryConfig);
@@ -148,7 +149,7 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
 
         List<Mail> sent = mailbox.getMailsSentTo(email);
         assertEquals(1, sent.size());
-        String emailText = sent.get(0).getText();
+        String emailText = sent.get(0).getHtml();
 
         //Checks only if email message is correctly formatted. The URL is only for test purpose and may be invalid.
         String expectedUrl = "https://github.com/jboss-set/jira-issue-lottery/blob/main/.github/jira-issue-lottery.yml";
@@ -157,16 +158,16 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
 
     @Test
     public void testExtractingUsername() throws Exception {
-        String email = "The-Huginn@thehuginn.com";
+        String email = "Tadpole@thehuginn.com";
         String configFile = """
                 delay: P14D
                 participants:
-                  - email: The-Huginn@thehuginn.com
+                  - email: %s
                     maxIssues: 5
                     projects:
                       - project: WFLY
                         components: [Documentation]
-                        maxIssues: 5""";
+                        maxIssues: 5""".formatted(email);
 
         LotteryConfig testLotteryConfig = objectMapper.readValue(configFile, LotteryConfig.class);
         when(lotteryConfigProducer.getLotteryConfig()).thenReturn(testLotteryConfig);
@@ -181,17 +182,17 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
         List<Mail> sent = mailbox.getMailsSentTo(email);
         assertEquals(1, sent.size());
         // Check for correct parsing of username from email
-        assertTrue(sent.get(0).getText().contains("Hi The-Huginn,"));
-        assertTrue(sent.get(0).getSubject().contains("The-Huginn"));
+        assertTrue(sent.get(0).getHtml().contains("Hi Tadpole,"));
+        assertTrue(sent.get(0).getSubject().contains("Tadpole"));
     }
 
     @Test
     public void testAssigningNoIssues() throws Exception {
-        String email = "The-Huginn@thehuginn.com";
+        String email = "Tadpole@thehuginn.com";
         String configFile = """
                 delay: P14D
                 participants:
-                  - email: The-Huginn@thehuginn.com
+                  - email: %s
                     maxIssues: 10
                     projects:
                       - project: WFLY
@@ -199,7 +200,7 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
                         maxIssues: 5
                       - project: RESTEASY
                         components: [Documentation]
-                        maxIssues: 5""";
+                        maxIssues: 5""".formatted(email);
 
         LotteryConfig testLotteryConfig = objectMapper.readValue(configFile, LotteryConfig.class);
         when(lotteryConfigProducer.getLotteryConfig()).thenReturn(testLotteryConfig);
@@ -220,7 +221,7 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
         String configFile = """
                 delay: P14D
                 participants:
-                  - email: The-Huginn@thehuginn.com
+                  - email: Tadpole@thehuginn.com
                     maxIssues: 5
                     projects:
                       - project: WFLY
@@ -243,29 +244,29 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
         int exitCode = cmd.execute();
         assertEquals(0, exitCode);
 
-        for (Map.Entry<String, org.jboss.set.draw.entities.Issue> userIssue : List.of(
-                Map.entry("The-Huginn@thehuginn.com", ourIssues.get(0)),
+        for (Map.Entry<String, Issue> userIssue : List.of(
+                Map.entry("Tadpole@thehuginn.com", ourIssues.get(0)),
                 Map.entry("xstefank@redhat.com", ourIssues.get(1)))) {
             List<Mail> sent = mailbox.getMailsSentTo(userIssue.getKey());
             assertEquals(1, sent.size());
             assertEquals(Lottery.EMAIL_SUBJECT.formatted(Lottery.getUsername(userIssue.getKey())), sent.get(0).getSubject());
             assertEquals(Lottery.createEmailText(userIssue.getKey(), List.of(userIssue.getValue())),
-                    sent.get(0).getText());
+                    sent.get(0).getHtml());
         }
     }
 
     @Test
     public void testAssigningMaximumIssues() throws Exception {
-        String email = "The-Huginn@thehuginn.com";
+        String email = "Tadpole@thehuginn.com";
         String configFile = """
                 delay: P14D
                 participants:
-                  - email: The-Huginn@thehuginn.com
+                  - email: %s
                     maxIssues: 5
                     projects:
                       - project: WELD
                         components: [Logging]
-                        maxIssues: 1""";
+                        maxIssues: 1""".formatted(email);
 
         LotteryConfig testLotteryConfig = objectMapper.readValue(configFile, LotteryConfig.class);
         when(lotteryConfigProducer.getLotteryConfig()).thenReturn(testLotteryConfig);
@@ -279,7 +280,7 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
 
         List<Mail> sent = mailbox.getMailsSentTo(email);
         assertEquals(1, sent.size());
-        assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(2))), sent.get(0).getText());
+        assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(2))), sent.get(0).getHtml());
     }
 
     @Test
@@ -307,7 +308,7 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
 
         List<Mail> sent = mailbox.getMailsSentTo(email);
         assertEquals(1, sent.size());
-        assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(2), ourIssues.get(3))), sent.get(0).getText());
+        assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(2), ourIssues.get(3))), sent.get(0).getHtml());
     }
 
     @Test
@@ -335,7 +336,7 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
 
         List<Mail> sent = mailbox.getMailsSentTo(email);
         assertEquals(1, sent.size());
-        assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(2), ourIssues.get(3))), sent.get(0).getText());
+        assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(2), ourIssues.get(3))), sent.get(0).getHtml());
     }
 
     @Test
@@ -363,6 +364,6 @@ public class LotteryDrawingTest extends AbstractLotteryTest {
 
         List<Mail> sent = mailbox.getMailsSentTo(email);
         assertEquals(1, sent.size());
-        assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(3))), sent.get(0).getText());
+        assertEquals(Lottery.createEmailText(email, List.of(ourIssues.get(3))), sent.get(0).getHtml());
     }
 }

@@ -7,10 +7,10 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.component.jira.JiraComponent;
 import org.apache.camel.component.jira.JiraConfiguration;
 import org.apache.camel.component.jira.JiraEndpoint;
-import org.jboss.set.config.JiraLotteryAppConfig;
 import org.jboss.set.processing.CollectorProducer;
 import org.jboss.set.processing.NewIssueCollector;
 import org.jboss.set.testing.JiraCommand;
+import org.jboss.set.config.JiraLotteryAppConfig;
 import picocli.CommandLine.Command;
 
 @Command(name = "jira-issue-lottery", mixinStandardHelpOptions = true)

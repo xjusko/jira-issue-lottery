@@ -7,11 +7,12 @@ import io.smallrye.mutiny.tuples.Tuple2;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.ConfigProvider;
-import org.jboss.set.config.LotteryConfig;
-import org.jboss.set.config.LotteryConfigProducer;
+import org.jboss.set.config.GitHubRawUrl;
 import org.jboss.set.draw.entities.Issue;
 import org.jboss.set.draw.entities.Participant;
 import org.jboss.set.processing.state.EveryIssueState;
+import org.jboss.set.config.LotteryConfig;
+import org.jboss.set.config.LotteryConfigProducer;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +24,6 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.joining;
-import static org.jboss.set.config.GitHubRawUrl.GitHubRepoToRawUrlConverter.RELATIVE_PATH;
 
 @Unremovable
 @ApplicationScoped
@@ -44,10 +44,11 @@ public class Lottery {
 
             %s
 
-            If you would like to unsubscribe, please remove yourself from the following repository's configuration file %s
+            If you would like to unsubscribe, please remove yourself from the following repository's configuration file <a href="%3$s">%3$s</a>
 
-            Have a nice day,
-            your Jira issue lottery bot""";
+            Jira issue lottery bot""";
+    private static final String PROJECT_LINE = "► <strong>%s</strong>\n";
+    private static final String LINK_LINE = "    • <a href=\"%1$s\">%1$s</a>\n";
 
     public void run(EveryIssueState collectedIssues) {
         LotteryConfig lotteryConfig = lotteryConfigProducer.getLotteryConfig();
@@ -87,7 +88,7 @@ public class Lottery {
                 .collect(Collectors.groupingBy(Issue::getAssignee));
         aggregatedByAssignee.forEach((participant, assignedIssues) -> mailer.send(new Mail()
                 .setSubject(EMAIL_SUBJECT.formatted(getUsername(participant.getEmail())))
-                .setText(createEmailText(participant.getEmail(), assignedIssues))
+                .setHtml(createEmailText(participant.getEmail(), assignedIssues))
                 .setTo(List.of(participant.getEmail()))));
     }
 
@@ -101,9 +102,10 @@ public class Lottery {
                 // group by Project name
                 issues.stream().collect(groupingBy(Issue::getProject)).entrySet().stream()
                         // write project and then collect all links with bullet point prepended
-                        .map(projectLinksEntry -> projectLinksEntry.getKey() + "\n" +
-                                projectLinksEntry.getValue().stream().map(issue -> "\t-" + issue.getBrowseUri().toString())
-                                        .collect(Collectors.joining("\n\n")))
+                        .map(projectLinksEntry -> PROJECT_LINE.formatted(projectLinksEntry.getKey()) +
+                                projectLinksEntry.getValue().stream()
+                                        .map(issue -> LINK_LINE.formatted(issue.getBrowseUri().toString()))
+                                        .collect(Collectors.joining()))
                         .collect(joining("\n")),
                 configFileUrl());
     }
@@ -111,6 +113,6 @@ public class Lottery {
     private static String configFileUrl() {
         String repo = ConfigProvider.getConfig().getConfigValue("jira-issue-lottery.config-file-repo").getRawValue();
         repo = repo.endsWith("/") ? repo.substring(0, repo.length() - 1) : repo;
-        return repo + "/blob/" + RELATIVE_PATH;
+        return repo + "/blob/" + GitHubRawUrl.GitHubRepoToRawUrlConverter.RELATIVE_PATH;
     }
 }
