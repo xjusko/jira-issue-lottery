@@ -1,11 +1,15 @@
 package org.jboss.set.draw;
 
 import io.quarkus.mailer.Mail;
+import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
+import jakarta.inject.Inject;
+import org.jboss.set.LotteryCommand;
+import org.jboss.set.config.LotteryConfig;
+import org.jboss.set.config.LotteryConfigProducer;
 import org.jboss.set.draw.entities.Issue;
 import org.jboss.set.query.IssueStatus;
 import org.jboss.set.wrappers.IssueWrapper;
-import org.jboss.set.config.LotteryConfig;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import picocli.CommandLine;
@@ -22,7 +26,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @QuarkusTest
-public class LotteryDrawingTest extends AbstractLotteryTest {
+public class LotteryDrawingTest extends AbstractCommandTest {
+
+    @InjectMock
+    protected LotteryConfigProducer lotteryConfigProducer;
+
+    @Inject
+    LotteryCommand app;
 
     @Override
     protected List<com.atlassian.jira.rest.client.api.domain.Issue> setupIssues() {

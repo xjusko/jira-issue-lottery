@@ -31,4 +31,12 @@ public class LotteryConfigProducer {
 
         return lotteryConfig;
     }
+
+    public LotteryConfig getLotteryConfigFromString(String configFile) {
+        try {
+            return objectMapper.readValue(configFile, LotteryConfig.class);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
